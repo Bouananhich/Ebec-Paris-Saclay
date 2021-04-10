@@ -1,13 +1,15 @@
 """Get nearest street."""
 import requests
 
-def get_nearest_city(
+
+def get_nearest_street(
     latitude: float,
     longitude: float
 ) -> str:
     n_iter = 0
     radplus = 100
     radmoins = 0
+    overpass_url = "http://overpass-api.de/api/interpreter"
     rad = (radplus + radmoins) / 2
     overpass_query = query_street(
         rad=rad, latitude=latitude, longitude=longitude)
