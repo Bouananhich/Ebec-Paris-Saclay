@@ -39,7 +39,6 @@ def get_nearest_city(
             n_iter = 0
             radplus = rad
             rad = (radplus + radmoins) / 2
-            print(rad)
             overpass_query = query_city(
                 rad=rad, latitude=latitude, longitude=longitude)
             response = requests.get(overpass_url,

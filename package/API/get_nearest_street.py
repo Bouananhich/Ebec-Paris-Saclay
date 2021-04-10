@@ -1,11 +1,11 @@
 """Get nearest street."""
 import requests
-
+from typing import Dict
 
 def get_nearest_street(
     latitude: float,
     longitude: float
-) -> str:
+) -> Dict:
     n_iter = 0
     radplus = 100
     radmoins = 0
@@ -48,8 +48,7 @@ def get_nearest_street(
                                     params={'data': overpass_query})
             data = response.json()
             ways = [x for x in data['elements'] if x['type'] == 'way']
-    return ways[0]['tags']['name']
-
+    return ways[0]
 
 def query_street(
     rad: float,
