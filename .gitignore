@@ -10,3 +10,4 @@
 .aws
 *.icloud
 *.ipynb_checkpoints/
+cache/
