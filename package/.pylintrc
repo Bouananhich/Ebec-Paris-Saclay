@@ -1,7 +1,7 @@
 [GENERAL]
 persistent=yes
 jobs=0
-disable=C0330,R0801,W1201,W1203
+disable=C0330,R0801,W1201,W1203,E0402,E0401
 
 [MESSAGES CONTROL]
 
@@ -10,7 +10,7 @@ disable=C0330,R0801,W1201,W1203
 confidence=
 [FORMAT]
 
-good-names=p1,p2,p3
+good-names=p1,p2,p3,logger,ch,data
 
 [REFACTORING]
 min-similarity-lines=5

@@ -11,10 +11,16 @@ logger = logging.getLogger(__name__)
 
 
 def get_nearest_street(
-    latitude: float,
-    longitude: float
+        latitude: float,
+        longitude: float
 ) -> Dict:
-    """."""
+    """Find the nearest street for a given point using binary search.
+
+    :param latitude: latitude of your point.
+    :param longitude: longitude of your point.
+
+    return ways[0]: name of the nearest street
+    """
     # Get hyperparameters from yaml.
     radplus = config.data.get("Nearest_street").get(
         "Binary_search").get("initial_upper_bound_radius", 100)

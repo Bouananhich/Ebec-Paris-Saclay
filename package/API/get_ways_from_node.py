@@ -7,13 +7,17 @@ from .queries import query_nodes, query_ways
 
 
 def get_ways_from_node(
-    list_node: List[int]
+        list_node: List[int]
 ) -> List[Tuple]:
-    """."""
+    """Find the ways that have common node with your street.
+
+    :param list_node: list of the nodes in your street.
+
+    return list_ways: list of ways that have common nodes with your street
+    """
     overpass_url = "http://overpass-api.de/api/interpreter"
     list_ways = []
     for id_node in list_node:
-
         overpass_query_get_node = query_nodes(id_node)
         response = requests.get(overpass_url,
                                 params={'data': overpass_query_get_node})
