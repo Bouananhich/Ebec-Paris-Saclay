@@ -12,8 +12,8 @@ logger = logging.getLogger(__name__)
 
 
 def get_nodes(
-    latitude: float = 48.89535,
-    longitude: float = 2.24697,
+    latitude: float,
+    longitude: float,
 ) -> List[int]:
     """Get nodes near position."""
     street = get_nearest_street(latitude=latitude,
@@ -24,8 +24,8 @@ def get_nodes(
 
 
 def get_ways(
-    latitude: float = 48.89535,
-    longitude: float = 2.24697,
+    latitude: float,
+    longitude: float,
 ) -> List[Tuple]:
     """Get ways crossing nearest street of point.
 
