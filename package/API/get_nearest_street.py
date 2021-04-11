@@ -1,7 +1,9 @@
 """Get nearest street."""
 import logging
-import requests
 from typing import Dict
+
+import requests
+
 from .. import config
 from .queries import query_street
 

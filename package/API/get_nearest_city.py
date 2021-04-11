@@ -1,6 +1,8 @@
 """Get nearest city."""
 import logging
+
 import requests
+
 from .. import config
 from .queries import query_city
 

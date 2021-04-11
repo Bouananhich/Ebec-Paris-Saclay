@@ -1,7 +1,9 @@
 """Get ways from node."""
-import requests
 from typing import List, Tuple
-from .queries import query_ways, query_nodes
+
+import requests
+
+from .queries import query_nodes, query_ways
 
 
 def get_ways_from_node(

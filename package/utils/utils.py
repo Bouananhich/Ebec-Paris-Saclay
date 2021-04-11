@@ -1,10 +1,12 @@
 """Useful functions"""
 import logging
-from typing import List, Tuple, Dict
 from copy import deepcopy
+from operator import itemgetter
+from typing import Dict, List, Tuple
+
 from numpy import array, cross, dot
 from numpy.linalg import norm
-from operator import itemgetter
+
 from ..API.get_nearest_street import get_nearest_street
 from ..API.get_ways_from_node import get_ways_from_node
 
@@ -42,7 +44,7 @@ def get_road_sections(
     road_name: str,
 ) -> List[List]:
     """Build road sections in which we can place the coordinates.
-    :param interp: Ouput of get_ways function.
+    :param interp: Output of get_ways function.
     :param road_name: Used to drop it in intersection_list.
 
     return sections_list : List[str,str, Tuple(float, float), Tuple(float, float)]"""
