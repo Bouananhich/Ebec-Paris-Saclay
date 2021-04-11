@@ -10,11 +10,16 @@ logger = logging.getLogger(__name__)
 
 
 def get_nearest_city(
-    latitude: float,
-    longitude: float,
+        latitude: float,
+        longitude: float,
 ) -> str:
-    """blabla"""
+    """Find the nearest city for a given point using binary search.
 
+    :param latitude: latitude of your point.
+    :param longitude: longitude of your point.
+
+    return data[0]['tags']['name']: name of the nearest city
+    """
     radplus = config.data.get("Nearest_city").get(
         "Binary_search").get("initial_upper_bound_radius", 10000)
     radmoins = config.data.get("Nearest_city").get(

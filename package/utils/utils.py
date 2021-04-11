@@ -1,4 +1,4 @@
-"""Useful functions"""
+"""Useful functions."""
 import logging
 from copy import deepcopy
 from operator import itemgetter
@@ -14,10 +14,16 @@ logger = logging.getLogger(__name__)
 
 
 def get_nodes(
-    latitude: float,
-    longitude: float,
+        latitude: float,
+        longitude: float,
 ) -> List[int]:
-    """Get nodes near position."""
+    """Get nodes near position.
+
+    :param latitude: latitude of your point.
+    :param longitude: longitude of your point.
+
+    return nodes, name: nodes in your street and name of the street
+    """
     street = get_nearest_street(latitude=latitude,
                                 longitude=longitude)
     name = street.get("tags").get("name")
@@ -26,28 +32,30 @@ def get_nodes(
 
 
 def get_ways(
-    latitude: float,
-    longitude: float,
+        latitude: float,
+        longitude: float,
 ) -> List[Tuple]:
     """Get ways crossing nearest street of point.
 
     return list of ways crossing the street containing the
-    (latitude, longitude) point"""
+    (latitude, longitude) point
+    """
     nodes, name = get_nodes(latitude=latitude,
                             longitude=longitude)
     ways = get_ways_from_node(list_node=nodes)
     return ways, name
 
-
 def get_road_sections(
-    intersection_list: List[Tuple],
-    road_name: str,
+        intersection_list: List[Tuple],
+        road_name: str,
 ) -> List[List]:
     """Build road sections in which we can place the coordinates.
+
     :param interp: Output of get_ways function.
     :param road_name: Used to drop it in intersection_list.
 
-    return sections_list : List[str,str, Tuple(float, float), Tuple(float, float)]"""
+    return sections_list : List[str,str, Tuple(float, float), Tuple(float, float)]
+    """
     new_intersection_list = deepcopy(intersection_list)
     sections_list = list()
     new_names_list = list()
@@ -70,9 +78,11 @@ def conversion_list_dict(
     sections_list: List[List],
 ) -> Dict[Tuple, List]:
     """Convert sections list to a dictionnary.
+
     :param sections_list: Output of get_road_sections.
 
-    return sections_dict"""
+    return sections_dict
+    """
     sections_dict = {tuple([key1, key2]): list_coordinates for key1,
                      key2, *list_coordinates in sections_list}
 
@@ -80,10 +90,20 @@ def conversion_list_dict(
 
 
 def distance_from_segment(
-    reference: Tuple[float, float],
-    coordinates_dict: Dict[List, List],
+        reference: Tuple[float, float],
+        coordinates_dict: Dict[Tuple, List],
 ) -> Dict[Tuple, List]:
-    """Return distance from each segments."""
+    """Compute the distance of a given point to segments.
+
+    :param reference: point.
+    :param coordinates_dict: keys are the name of the streets
+    that bound the segment, values are list of tuples that
+    correspond to the coordinates of the crossings.
+
+    return distance_dict: keys are the name of the streets
+    that bound a segment, values are the computed distance
+    between the point and the associated segment
+    """
     logging.info("Computing shortest segment")
     p3 = array(reference)
     distances_dict = dict()
@@ -102,8 +122,13 @@ def distance_from_segment(
 
 
 def find_optimal(
-    distances_dict: Dict[Tuple, List],
+        distances_dict: Dict[Tuple, List],
 ) -> Tuple[str]:
-    """Find optimal segment from distances_dict computed by distance_from_segment."""
+    """Find optimal segment from distances_dict computed by distance_from_segment.
+
+    :param distances_dict: output of distance_from_segment.
+
+    return key_min: name of the street that bounds the minimum distance segment
+    """
     key_min = min(distances_dict.items(), key=itemgetter(1))[0]
     return key_min
