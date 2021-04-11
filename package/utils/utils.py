@@ -87,7 +87,7 @@ def distance_from_segment(
     distances_dict = dict()
     for key, (p1, p2) in coordinates_dict.items():
         p1, p2 = array(p1), array(p2)
-        distance = norm(cross(p2 - p1, p3 - p1)) / norm(p2 - p1)
+        distance = norm(cross(p2 - p1, p3 - p1))
         # check if the nearest point is in the segment (p1,p2)
         if dot(p3 - p1, p3 - p2) < 0:
             distances_dict[key] = distance

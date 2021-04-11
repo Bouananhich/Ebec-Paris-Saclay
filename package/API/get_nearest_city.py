@@ -6,12 +6,13 @@ from .queries import query_city
 
 logger = logging.getLogger(__name__)
 
+
 def get_nearest_city(
     latitude: float,
     longitude: float,
 ) -> str:
     """blabla"""
-    n_iter = 0
+
     radplus = config.data.get("Nearest_city").get(
         "Binary_search").get("initial_upper_bound_radius", 10000)
     radmoins = config.data.get("Nearest_city").get(
@@ -24,36 +25,30 @@ def get_nearest_city(
     rad = (radplus + radmoins) / 2
     overpass_query = query_city(
         rad=rad, latitude=latitude, longitude=longitude)
+    logging.info(
+        "Using openstreetmap API to get nearest city. This can take a while.. ☕")
     response = requests.get(overpass_url,
                             params={'data': overpass_query})
-    data = response.json()
+    data = response.json().get('elements')
+    logging.info("Got the response")
 
-    while len(data['elements']) != 1:
+    n_iter = 0
+    while len(data) != 1:
         if n_iter == max_iter_before_increased_radius:
             n_iter = 0
             radplus += 1000
-            rad = (radplus + radmoins) / 2
-            overpass_query = query_city(
-                rad=rad, latitude=latitude, longitude=longitude)
-            response = requests.get(overpass_url,
-                                    params={'data': overpass_query})
-            data = response.json()
-        elif len(data['elements']) == 0:
-            n_iter += 1
-            radmoins = rad
-            rad = (radplus + radmoins) / 2
-            overpass_query = query_city(
-                rad=rad, latitude=latitude, longitude=longitude)
-            response = requests.get(overpass_url,
-                                    params={'data': overpass_query})
-            data = response.json()
-        elif len(data['elements']) >= 2:
-            n_iter = 0
-            radplus = rad
-            rad = (radplus + radmoins) / 2
-            overpass_query = query_city(
-                rad=rad, latitude=latitude, longitude=longitude)
-            response = requests.get(overpass_url,
-                                    params={'data': overpass_query})
-            data = response.json()
-    return data['elements'][0]['tags']['name']
+        else:
+            if data:
+                n_iter = 0
+                radplus = rad
+            else:
+                n_iter += 1
+                radmoins = rad
+
+        rad = (radplus + radmoins) / 2
+        overpass_query = query_city(
+            rad=rad, latitude=latitude, longitude=longitude)
+        response = requests.get(overpass_url,
+                                params={'data': overpass_query})
+        data = response.json().get('elements')
+    return data[0]['tags']['name']

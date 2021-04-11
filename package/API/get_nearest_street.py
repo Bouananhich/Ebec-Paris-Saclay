@@ -13,9 +13,9 @@ def get_nearest_street(
     longitude: float
 ) -> Dict:
     """."""
-    #Get hyperparameters from yaml.
+    # Get hyperparameters from yaml.
     radplus = config.data.get("Nearest_street").get(
-        "Binary_search").get("initial_upper_bound_radius",100)
+        "Binary_search").get("initial_upper_bound_radius", 100)
     radmoins = config.data.get("Nearest_street").get(
         "Binary_search").get("lower_bound_radius", 0)
     max_iter_before_increased_radius = config.data.get("Nearest_street").get(
@@ -26,7 +26,9 @@ def get_nearest_street(
     rad = (radplus + radmoins) / 2
     overpass_query = query_street(
         rad=rad, latitude=latitude, longitude=longitude)
-    logging.info("Using openstreetmap API. This can take a while.. ☕")
+    logging.info(
+        "Using openstreetmap API to get nearest street. This can take a while.. ☕")
+
     response = requests.get(overpass_url,
                             params={'data': overpass_query})
     data = response.json()
@@ -35,22 +37,21 @@ def get_nearest_street(
 
     n_iter = 0
     while len(ways) != 1:
-        #Increase radius after 10 unsucessful iterartions.
+        # Increase radius after 10 unsucessful iterartions.
         if n_iter == max_iter_before_increased_radius:
             n_iter = 0
             radplus += 1000
-            rad = (radplus + radmoins) / 2
 
         else:
-            #Binary search algorithm.
-            if len(ways) == 0:
-                n_iter += 1
-                radmoins = rad
-            else:
+            # Binary search algorithm.
+            if ways:
                 n_iter = 0
                 radplus = rad
-            rad = (radplus + radmoins) / 2
+            else:
+                n_iter += 1
+                radmoins = rad
 
+        rad = (radplus + radmoins) / 2
         overpass_query = query_street(
             rad=rad, latitude=latitude, longitude=longitude)
         response = requests.get(overpass_url,
