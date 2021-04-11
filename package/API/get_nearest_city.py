@@ -1,5 +1,10 @@
 """Get nearest city."""
+import logging
 import requests
+from .. import config
+from .queries import query_city
+
+logger = logging.getLogger(__name__)
 
 def get_nearest_city(
     latitude: float,
@@ -7,17 +12,24 @@ def get_nearest_city(
 ) -> str:
     """blabla"""
     n_iter = 0
-    radplus = 10000
-    radmoins = 0
+    radplus = config.data.get("Nearest_city").get(
+        "Binary_search").get("initial_upper_bound_radius", 10000)
+    radmoins = config.data.get("Nearest_city").get(
+        "Binary_search").get("lower_bound_radius", 0)
+    max_iter_before_increased_radius = config.data.get("Nearest_city").get(
+        "Binary_search").get("iter_before_increased_radius", 10)
+    overpass_url = config.data.get("API").get(
+        "overpass_url", "http://overpass-api.de/api/interpreter")
+
     rad = (radplus + radmoins) / 2
-    overpass_url = "http://overpass-api.de/api/interpreter"
     overpass_query = query_city(
         rad=rad, latitude=latitude, longitude=longitude)
     response = requests.get(overpass_url,
                             params={'data': overpass_query})
     data = response.json()
+
     while len(data['elements']) != 1:
-        if n_iter == 10:
+        if n_iter == max_iter_before_increased_radius:
             n_iter = 0
             radplus += 1000
             rad = (radplus + radmoins) / 2
@@ -45,18 +57,3 @@ def get_nearest_city(
                                     params={'data': overpass_query})
             data = response.json()
     return data['elements'][0]['tags']['name']
-
-
-def query_city(
-    rad: float,
-    latitude: float,
-    longitude: float,
-):
-    """."""
-    overpass_query = f"""[out:json][timeout:25];
-                        (node["place"="town"](around:{rad},{latitude},{longitude});
-                        node["place"="city"](around:{rad},{latitude},{longitude}););
-                        out body;
-                        >;
-                        out skel qt;"""
-    return overpass_query

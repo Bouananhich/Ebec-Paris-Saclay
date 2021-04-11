@@ -1,6 +1,7 @@
 """Get ways from node."""
 import requests
 from typing import List, Tuple
+from .queries import query_ways, query_nodes
 
 
 def get_ways_from_node(
@@ -11,16 +12,13 @@ def get_ways_from_node(
     list_ways = []
     for id_node in list_node:
 
-        overpass_query_get_node = f"""[out:json][timeout:25];
-                            node({id_node});
-                            out;
-                            """
+        overpass_query_get_node = query_nodes(id_node)
         response = requests.get(overpass_url,
                                 params={'data': overpass_query_get_node})
         node = response.json()
         latitude = node['elements'][0]['lat']
         longitude = node['elements'][0]['lon']
-        overpass_query_get_ways = ways_query(
+        overpass_query_get_ways = query_ways(
             latitude=latitude, longitude=longitude)
         response = requests.get(overpass_url,
                                 params={'data': overpass_query_get_ways})
@@ -28,16 +26,3 @@ def get_ways_from_node(
         names = [way['tags']['name'] for way in ways]
         list_ways.append(((list(set(names))), (latitude, longitude)))
     return list_ways
-
-
-def ways_query(
-    latitude: float,
-    longitude: float,
-) -> str:
-    overpass_query_get_ways = f"""[out:json];
-                                    way
-                                      (around:2,{latitude},{longitude})
-                                      [name];
-                                    (._;>;);
-                                    out;"""
-    return overpass_query_get_ways

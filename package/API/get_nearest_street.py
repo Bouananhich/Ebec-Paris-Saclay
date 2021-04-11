@@ -2,6 +2,8 @@
 import logging
 import requests
 from typing import Dict
+from .. import config
+from .queries import query_street
 
 logger = logging.getLogger(__name__)
 
@@ -11,10 +13,16 @@ def get_nearest_street(
     longitude: float
 ) -> Dict:
     """."""
-    n_iter = 0
-    radplus = 100
-    radmoins = 0
-    overpass_url = "http://overpass-api.de/api/interpreter"
+    #Get hyperparameters from yaml.
+    radplus = config.data.get("Nearest_street").get(
+        "Binary_search").get("initial_upper_bound_radius",100)
+    radmoins = config.data.get("Nearest_street").get(
+        "Binary_search").get("lower_bound_radius", 0)
+    max_iter_before_increased_radius = config.data.get("Nearest_street").get(
+        "Binary_search").get("iter_before_increased_radius", 10)
+    overpass_url = config.data.get("API").get(
+        "overpass_url", "http://overpass-api.de/api/interpreter")
+
     rad = (radplus + radmoins) / 2
     overpass_query = query_street(
         rad=rad, latitude=latitude, longitude=longitude)
@@ -24,50 +32,30 @@ def get_nearest_street(
     data = response.json()
     logging.info("Got the response")
     ways = [x for x in data['elements'] if x['type'] == 'way']
+
+    n_iter = 0
     while len(ways) != 1:
-        if n_iter == 10:
+        #Increase radius after 10 unsucessful iterartions.
+        if n_iter == max_iter_before_increased_radius:
             n_iter = 0
             radplus += 1000
             rad = (radplus + radmoins) / 2
-            overpass_query = query_street(
-                rad=rad, latitude=latitude, longitude=longitude)
-            response = requests.get(overpass_url,
-                                    params={'data': overpass_query})
-            data = response.json()
-            ways = [x for x in data['elements'] if x['type'] == 'way']
-        elif len(ways) == 0:
-            n_iter += 1
-            radmoins = rad
+
+        else:
+            #Binary search algorithm.
+            if len(ways) == 0:
+                n_iter += 1
+                radmoins = rad
+            else:
+                n_iter = 0
+                radplus = rad
             rad = (radplus + radmoins) / 2
-            overpass_query = query_street(
-                rad=rad, latitude=latitude, longitude=longitude)
-            response = requests.get(overpass_url,
-                                    params={'data': overpass_query})
-            data = response.json()
-            ways = [x for x in data['elements'] if x['type'] == 'way']
-        elif len(ways) >= 2:
-            n_iter = 0
-            radplus = rad
-            rad = (radplus + radmoins) / 2
-            overpass_query = query_street(
-                rad=rad, latitude=latitude, longitude=longitude)
-            response = requests.get(overpass_url,
-                                    params={'data': overpass_query})
-            data = response.json()
-            ways = [x for x in data['elements'] if x['type'] == 'way']
+
+        overpass_query = query_street(
+            rad=rad, latitude=latitude, longitude=longitude)
+        response = requests.get(overpass_url,
+                                params={'data': overpass_query})
+        data = response.json()
+        ways = [x for x in data['elements'] if x['type'] == 'way']
+
     return ways[0]
-
-
-def query_street(
-    rad: float,
-    latitude: float,
-    longitude: float,
-):
-    """."""
-    overpass_query = f"""[out:json];
-                    way
-                      (around:{rad},{latitude},{longitude})
-                      [name];
-                    (._;>;);
-                    out;"""
-    return overpass_query
