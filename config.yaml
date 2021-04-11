@@ -3,7 +3,7 @@ authors: Simon Tronchi, Arnaud Petit, Hicham Bouanani, Matthieu Annequin
 logLevel: INFO
 
 API:
-    overpass_url: "http://overpass-api.de/api/interpreter"
+    overpass_url: http://overpass-api.de/api/interpreter
 
 Nearest_street:
   Binary_search:
@@ -14,5 +14,5 @@ Nearest_street:
 Nearest_city:
   Binary_search:
     iter_before_increased_radius: 10
-    initial_upper_bound_radius: 100
+    initial_upper_bound_radius: 10000
     lower_bound_radius: 0
