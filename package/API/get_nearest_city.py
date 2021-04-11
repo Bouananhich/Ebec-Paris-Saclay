@@ -52,6 +52,7 @@ def query_city(
     latitude: float,
     longitude: float,
 ):
+    """."""
     overpass_query = f"""[out:json][timeout:25];
                         (node["place"="town"](around:{rad},{latitude},{longitude});
                         node["place"="city"](around:{rad},{latitude},{longitude}););

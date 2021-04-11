@@ -1,11 +1,16 @@
 """Get nearest street."""
+import logging
 import requests
 from typing import Dict
+
+logger = logging.getLogger(__name__)
+
 
 def get_nearest_street(
     latitude: float,
     longitude: float
 ) -> Dict:
+    """."""
     n_iter = 0
     radplus = 100
     radmoins = 0
@@ -13,9 +18,11 @@ def get_nearest_street(
     rad = (radplus + radmoins) / 2
     overpass_query = query_street(
         rad=rad, latitude=latitude, longitude=longitude)
+    logging.info("Using openstreetmap API. This can take a while.. ☕")
     response = requests.get(overpass_url,
                             params={'data': overpass_query})
     data = response.json()
+    logging.info("Got the response")
     ways = [x for x in data['elements'] if x['type'] == 'way']
     while len(ways) != 1:
         if n_iter == 10:
@@ -50,12 +57,13 @@ def get_nearest_street(
             ways = [x for x in data['elements'] if x['type'] == 'way']
     return ways[0]
 
+
 def query_street(
     rad: float,
     latitude: float,
     longitude: float,
 ):
-
+    """."""
     overpass_query = f"""[out:json];
                     way
                       (around:{rad},{latitude},{longitude})
