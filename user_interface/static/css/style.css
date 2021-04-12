@@ -5,17 +5,18 @@
  *
  * Made By MaterializeCSS.com
  */
-
 .icon-block {
   padding: 0 15px;
 }
+
 .icon-block .material-icons {
-	font-size: inherit;
+  font-size: inherit;
 }
 
 .btn, .btn-large, .btn-small {
   background-color: #D06886 !important;
 }
+
 .page-footer {
   background-color: #8B7898 !important;
 }
@@ -23,15 +24,29 @@
 .light-blue.lighten-1 {
   background-color: #69003B !important;
 }
+
 .orange-text {
-  color: #D06886!important;
+  color: #D06886 !important;
 }
+
 .light-blue-text {
   color: #69003B !important;
 }
+
 .orange {
-  background-color: #D06886 ;
+  background-color: #D06886;
 }
+
 .orange-text.text-lighten-3 {
   color: #69003B !important;
+}
+
+#buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.button {
+  position: relative;
+  width: 27%;
 }

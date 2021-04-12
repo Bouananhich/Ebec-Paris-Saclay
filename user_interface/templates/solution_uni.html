@@ -1,0 +1,59 @@
+{% extends 'layout.html' %}
+{% block head %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+{% endblock %}
+{% block body %}
+<div class="section no-pad-bot" id="index-banner">
+  <div class="container" id="form_container">
+    <br><br>
+    <h1 class="header center orange-text">One Object Solution</h1>
+    <div class="row center">
+      <h5 class="header col s12 light">Enter the coordinates of your object to see the description of the road section which include your object. You can enter multiple objects to see the description of the road section for each. You can also upload
+        a csv file with all of your objects coordinates in it.</h5>
+    </div>
+    <div class="row">
+      <a class="btn-floating btn-large waves-effect waves-light red" id='add_button'><i class="material-icons">add</i></a>
+    </div>
+    <div id="inputForms">
+      <div class="row" id="get_solution_data">
+        <div class="input-field col s6">
+          <input value="48.89525193" id="latitude" type="text" class="validate">
+          <label class="active" for="latitude">latitude</label>
+        </div>
+        <div class="input-field col s6">
+          <input value="2.247122897" id="longitude" type="text" class="validate">
+          <label class="active" for="longitude">longitude</label>
+        </div>
+      </div>
+    </div>
+
+    <br><br>
+
+  </div>
+  <div id="buttons">
+    <div class="button">
+      <button class="btn waves-effect waves-light" type="submit" name="action" id="input-one-submit">Run
+        <i class="material-icons right">send</i>
+      </button>
+    </div>
+    <div class="button">
+      <form action="#">
+        <div class="file-field input-field">
+          <div class="btn">
+            <span>CSV File</span>
+            <input type="file" class="file-path validate">
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  {% endblock %}
+  {% block footer %}
+  <script>
+    $("#add_button").click(function() {
+      $("#get_solution_data").clone().appendTo("#inputForms");
+    });
+  </script>
+  {% endblock %}
