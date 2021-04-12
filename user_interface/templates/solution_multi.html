@@ -17,12 +17,20 @@
     <div id="inputForms">
       <div class="row" id="get_solution_data">
         <div class="input-field col s6">
-          <input value="48.89525193" id="latitude" type="text" class="validate">
-          <label class="active" for="latitude">latitude</label>
+          <input value="48.89525193" id="latitude_1" type="text" class="validate">
+          <label class="active" for="latitude_1">Latitude 1</label>
         </div>
         <div class="input-field col s6">
-          <input value="2.247122897" id="longitude" type="text" class="validate">
-          <label class="active" for="longitude">longitude</label>
+          <input value="2.247122897" id="longitude_1" type="text" class="validate">
+          <label class="active" for="longitude_1">Longitude 1</label>
+        </div>
+        <div class="input-field col s6">
+          <input value="48.89525193" id="latitude_2" type="text" class="validate">
+          <label class="active" for="latitude_2">Latitude 2</label>
+        </div>
+        <div class="input-field col s6">
+          <input value="2.247122897" id="longitude_2" type="text" class="validate">
+          <label class="active" for="longitude_2">Longitude 2</label>
         </div>
       </div>
     </div>
@@ -52,7 +60,7 @@
   {% block footer %}
   <script>
     $("#add_button").click(function() {
-      $("#get_solution_data").clone().appendTo("#form_container");
+      $("#get_solution_data").clone().appendTo("#inputForms");
     });
   </script>
   {% endblock %}
