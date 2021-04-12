@@ -17,6 +17,7 @@ def query_city(
     overpass_query = f"""[out:json][timeout:800];
                         (node["place"="town"](around:{rad},{latitude},{longitude});
                         node["place"="city"](around:{rad},{latitude},{longitude}););
+                        node["place"="village"](around:{rad},{latitude},{longitude}););
                         out body;
                         >;
                         out skel qt;"""
