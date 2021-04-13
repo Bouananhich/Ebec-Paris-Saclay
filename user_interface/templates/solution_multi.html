@@ -14,53 +14,76 @@
     <div class="row">
       <a class="btn-floating btn-large waves-effect waves-light red" id='add_button'><i class="material-icons">add</i></a>
     </div>
-    <div id="inputForms">
-      <div class="row" id="get_solution_data">
-        <div class="input-field col s6">
-          <input value="48.89525193" id="latitude_1" type="text" class="validate">
-          <label class="active" for="latitude_1">Latitude 1</label>
+    <form method='POST' id="inputForms" action="{{ url_for('multi_form') }}">
+      <div class="row" id="get_solution_data1">
+        <div class="input-field col s6" id="1latitude1">
+          <input name="1latitude1" type="text" class="validate">
+          <label class="active" for="latitude">Latitude 1</label>
         </div>
-        <div class="input-field col s6">
-          <input value="2.247122897" id="longitude_1" type="text" class="validate">
-          <label class="active" for="longitude_1">Longitude 1</label>
+        <div class="input-field col s6" id="1longitude1">
+          <input name='1longitude1' type="text" class="validate">
+          <label class="active" for="longitude">Longitude 1</label>
         </div>
-        <div class="input-field col s6">
-          <input value="48.89525193" id="latitude_2" type="text" class="validate">
-          <label class="active" for="latitude_2">Latitude 2</label>
+        <div class="input-field col s6" id="2latitude1">
+          <input name="2latitude1" type="text" class="validate">
+          <label class="active" for="latitude">Latitude 2</label>
         </div>
-        <div class="input-field col s6">
-          <input value="2.247122897" id="longitude_2" type="text" class="validate">
-          <label class="active" for="longitude_2">Longitude 2</label>
+        <div class="input-field col s6" id="2longitude1">
+          <input name='2longitude1' type="text" class="validate">
+          <label class="active" for="longitude">Longitude 2</label>
         </div>
       </div>
-    </div>
-
+      <button class="btn waves-effect waves-light" type="submit">submit <i class="material-icons right">send</i></button>
+    </form>
     <br><br>
 
   </div>
   <div id="buttons">
-    <div class="button">
-      <button class="btn waves-effect waves-light" type="submit" name="action" id="input-one-submit">Run
-        <i class="material-icons right">send</i>
-      </button>
-    </div>
-    <div class="button">
-      <form action="#">
-        <div class="file-field input-field">
-          <div class="btn">
-            <span>CSV File</span>
-            <input type="file" class="file-path validate">
-          </div>
+    <form method='POST' action="{{ url_for('multi_csv') }}" enctype="multipart/form-data">
+      <div class="file-field input-field">
+        <div class="btn">
+          <span>CSV File</span>
+          <input type="file">
         </div>
-      </form>
-    </div>
+        <div class="file-path-wrapper">
+          <input class="file-path validate" type="text">
+        </div>
+      </div>
+      <button class="btn waves-effect waves-light" type="submit">submit <i class="material-icons right">send</i></button>
+    </form>
   </div>
 
   {% endblock %}
   {% block footer %}
   <script>
-    $("#add_button").click(function() {
-      $("#get_solution_data").clone().appendTo("#inputForms");
+    $('#add_button').click(function(){
+
+
+    // get the last DIV which ID starts with ^= "klon"
+    var $div = $('div[id^="get_solution_data"]:last');
+
+    // Read the Number from that DIV's ID (i.e: 3 from "klon3")
+    // And increment that number by 1
+    var num = parseInt( $div.prop("id").match(/\d+/g), 10 ) +1;
+
+    // Clone it and assign the new ID (i.e: from num 4 to ID "klon4")
+    var $klon = $div.clone().prop('id', 'get_solution_data'+num );
+    $latitude1 = $klon.children('div[id^="1latitude"]')
+    $latitude1.attr('id', '1latitude'+num );
+    $longitude1 = $klon.children('div[id^="1longitude"]')
+    $longitude1.attr('id', '1longitude'+num );
+    $latitude1.children('input').attr('name', '1latitude'+num );
+    $longitude1.children('input').attr('name', '1longitude'+num );
+    $latitude2 = $klon.children('div[id^="2latitude"]')
+    $latitude2.attr('id', '2latitude'+num );
+    $longitude2 = $klon.children('div[id^="2longitude"]')
+    $longitude2.attr('id', '2longitude'+num );
+    $latitude2.children('input').attr('name', '2latitude'+num );
+    $longitude2.children('input').attr('name', '2longitude'+num );
+
+    // Finally insert $klon wherever you want
+    $div.after( $klon );
+
     });
   </script>
   {% endblock %}
