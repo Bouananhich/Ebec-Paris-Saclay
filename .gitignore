@@ -11,3 +11,4 @@
 *.icloud
 *.ipynb_checkpoints/
 cache/
+*.pyc
