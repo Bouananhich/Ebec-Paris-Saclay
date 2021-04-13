@@ -7,6 +7,7 @@ from typing import Dict, List, Tuple
 from numpy import array, cross, dot
 from numpy.linalg import norm
 
+#import panda as pd
 from ..API.get_nearest_street import get_nearest_street
 from ..API.get_ways_from_node import get_ways_from_node
 
@@ -132,3 +133,31 @@ def find_optimal(
     """
     key_min = min(distances_dict.items(), key=itemgetter(1))[0]
     return key_min
+
+def get_order_in_segment(
+        list_coordinates:List[Tuple],
+        section:List[List],
+)->Dict[Tuple,int]:
+    """Give the order of coordinates in the segment.
+    
+    :param list_coordinates: List of the coordinates of the points you want to order.
+    :param section: names of the street that bound the segment, coordinates of the node 
+    of the bounds of the segment.
+    
+    return position:keys are the coordinates, values are their position in the street
+    """
+    reference_point_coordinates = section[2]
+    reference_point = array(reference_point_coordinates)
+    distance = dict()
+    for x in list_coordinates:
+        point = array(x)
+        distance[x] = norm(reference_point-point)
+    position = dict()
+    position_in_street = 1
+    while bool(distance):
+        coordinates = min(distance, key=lambda k: distance[k])
+        distance.pop(coordinates)
+        position[coordinates] = position_in_street
+        position_in_street += 1
+    return position
+
