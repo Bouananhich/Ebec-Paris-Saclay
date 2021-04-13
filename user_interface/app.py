@@ -6,6 +6,7 @@ app = Flask(__name__)
 
 ALLOWED_EXTENSIONS = {'csv', 'txt'}
 app.config['UPLOAD_FOLDER'] = './'
+app.config['SECRET_KEY'] = 'f3cfe9ed8fae309f02079dbf'
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -15,11 +16,11 @@ def allowed_file(filename):
 def welcome():
     return render_template('home.html')
 
-@app.route('/solution_uni')
+@app.route('/solution_uni' ,methods=['GET','POST'])
 def solution_uni():
     return render_template('solution_uni.html')
 
-@app.route('/solution_multi')
+@app.route('/solution_multi',methods=['GET','POST'])
 def solution_multi():
     return render_template('solution_multi.html')
 
@@ -35,7 +36,7 @@ def uni_form():#faire les cas d'erreur car pas de string
     print(coord_input)
     return render_template('solution_uni.html')
 
-@app.route('/uni_csv', methods=['POST'])
+@app.route('/uni_csv', methods=['POST','GET'])
 def uni_csv():
     if request.method == 'POST':
         # check if the post request has the file part
@@ -51,7 +52,9 @@ def uni_csv():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(filename)
+            flash('file successfully upload')
             return render_template('solution_uni.html')
+    
     return '''
     <!doctype html>
     <title>Upload new File</title>

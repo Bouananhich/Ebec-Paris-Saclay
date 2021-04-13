@@ -32,7 +32,7 @@
 
   </div>
   <div id="buttons">
-    <form action="{{ url_for('uni_csv') }}">
+    <form method='POST' action="{{ url_for('uni_csv') }}" enctype="multipart/form-data">
       <div class="file-field input-field">
         <div class="btn">
           <span>CSV File</span>
