@@ -1,10 +1,9 @@
 """Get nearest city."""
 import logging
 
-import requests
-
 from .. import config
 from .queries import query_city
+from .supercharged_requests import requests
 
 logger = logging.getLogger(__name__)
 
@@ -34,8 +33,8 @@ def get_nearest_city(
         rad=rad, latitude=latitude, longitude=longitude)
     logging.info(
         "Using openstreetmap API to get nearest city. This can take a while.. ☕")
-    response = requests.get(overpass_url,
-                            params={'data': overpass_query})
+    response = requests.supercharged_requests(overpass_url,
+                                              params={'data': overpass_query})
     data = response.json().get('elements')
     logging.info("Got the response")
 
@@ -55,7 +54,7 @@ def get_nearest_city(
         rad = (radplus + radmoins) / 2
         overpass_query = query_city(
             rad=rad, latitude=latitude, longitude=longitude)
-        response = requests.get(overpass_url,
-                                params={'data': overpass_query})
+        response = requests.supercharged_requests(overpass_url,
+                                                  params={'data': overpass_query})
         data = response.json().get('elements')
     return data[0]['tags']['name']
