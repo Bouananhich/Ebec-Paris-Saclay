@@ -12,7 +12,7 @@ async def get_ways_from_node_async(
     """Async implementation."""
 
     task_list = []
-    sem = asyncio.Semaphore(5)
+    sem = asyncio.Semaphore(1)
     for indice_delay, id_node in enumerate(list_node):
 
         task_list.append(

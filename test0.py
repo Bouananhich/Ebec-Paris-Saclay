@@ -1,3 +1,3 @@
-from package import test
+from package import test_copy
 
-test()
+test_copy()
