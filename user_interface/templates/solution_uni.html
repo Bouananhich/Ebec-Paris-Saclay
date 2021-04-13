@@ -14,30 +14,25 @@
     <div class="row">
       <a class="btn-floating btn-large waves-effect waves-light red" id='add_button'><i class="material-icons">add</i></a>
     </div>
-    <form method='POST' id="inputForms">
-      <div class="row" id="get_solution_data">
-        <div class="input-field col s6">
-          <input value="48.89525193" id="latitude" type="text" class="validate">
-          <label class="active" for="latitude">latitude</label>
+    <form method='POST' id="inputForms" action="{{ url_for('uni_form') }}">
+      <div class="row" id="get_solution_data1">
+        <div class="input-field col s6" id="latitude1">
+          <input name="latitude1" type="text" class="validate">
+          <label class="active" for="latitude">Latitude</label>
         </div>
-        <div class="input-field col s6">
-          <input value="2.247122897" id="longitude" type="text" class="validate">
-          <label class="active" for="longitude">longitude</label>
+        <div class="input-field col s6" id="longitude1">
+          <input name='longitude1' type="text" class="validate">
+          <label class="active" for="longitude">Longitude</label>
         </div>
       </div>
-      <button type="submit">submit</button>
+      <button class="btn waves-effect waves-light" type="submit">submit <i class="material-icons right">send</i></button>
     </form>
 
     <br><br>
 
   </div>
   <div id="buttons">
-    <div class="button">
-      <button class="btn waves-effect waves-light" type="submit" name="action" id="input-one-submit">Run
-        <i class="material-icons right">send</i>
-      </button>
-    </div>
-    <form action="#">
+    <form action="{{ url_for('uni_csv') }}">
       <div class="file-field input-field">
         <div class="btn">
           <span>CSV File</span>
@@ -47,6 +42,7 @@
           <input class="file-path validate" type="text">
         </div>
       </div>
+      <button class="btn waves-effect waves-light" type="submit">submit <i class="material-icons right">send</i></button>
     </form>
   </div>
 
@@ -54,30 +50,34 @@
   <script src="https://code.jquery.com/jquery-3.5.1.js" 
   integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" 
   crossorigin="anonymous"></script>
-  <script type="text/javascript">
-    $(document).on('submit','#inputForms',function(e)
-                   {
-      console.log('hello');
-      e.preventDefault();
-      $.ajax({
-        type:'POST',
-        url:'/test',
-        data:{
-          todo:$("#latitude").val()
-        },
-        success:function()
-        {
-          alert('saved');
-        }
-      })
-    });
-  </script>
+  
   {% endblock %}
   {% block footer %}
   <script>
-    $("#add_button").click(function() {
-      $("#get_solution_data").clone().appendTo("#inputForms");
+    $('#add_button').click(function(){
+
+
+    // get the last DIV which ID starts with ^= "klon"
+    var $div = $('div[id^="get_solution_data"]:last');
+
+    // Read the Number from that DIV's ID (i.e: 3 from "klon3")
+    // And increment that number by 1
+    var num = parseInt( $div.prop("id").match(/\d+/g), 10 ) +1;
+
+    // Clone it and assign the new ID (i.e: from num 4 to ID "klon4")
+    var $klon = $div.clone().prop('id', 'get_solution_data'+num );
+    $latitude = $klon.children('div[id^="latitude"]')
+    $latitude.attr('id', 'latitude'+num );
+    $longitude = $klon.children('div[id^="longitude"]')
+    $longitude.attr('id', 'longitude'+num );
+    $latitude.children('input').attr('name', 'latitude'+num );
+    $longitude.children('input').attr('name', 'longitude'+num );
+
+    // Finally insert $klon wherever you want
+    $div.after( $klon );
+
     });
   </script>
+ 
 
   {% endblock %}
