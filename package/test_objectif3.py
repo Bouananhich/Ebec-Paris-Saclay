@@ -27,11 +27,7 @@ for coord in coords:
 
 liste_inter=[]
 for troncon in result:
-    a=troncon[0]
-    b=troncon[1]
-    c=roads_dict[troncon][0]
-    d=roads_dict[troncon][1]
-    section=[a,b,c,d]
+    section=[*troncon,*roads_dict[troncon]]
     liste_inter.append(section)
 
 print(merge_sections(liste_inter[0],liste_inter[1],roads))
