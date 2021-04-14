@@ -3,6 +3,7 @@ from werkzeug.utils import secure_filename
 import pandas as pd
 from package import pipeline_multi, pipeline_uni
 from package.utils.utils import generate_results
+import webbrowser
 
 app = Flask(__name__)
 
@@ -65,7 +66,8 @@ def uni_csv():
             flash('file successfully upload')
             results = pipeline_uni(coord_csv_uni)
             generate_results(results, './user_interface/templates/layout.html','./map.html','./user_interface/templates/results.html')
-            return render_template('results.html')
+        return render_template('results.html')
+
     
     return '''
     <!doctype html>
@@ -93,7 +95,8 @@ def multi_form():#faire la récupération
             continue
         results = pipeline_multi(coord_input_multi)
         generate_results(results, './user_interface/templates/layout.html','./map.html','./user_interface/templates/results.html')
-    return render_template('solution_multi.html')
+    return render_template('results.html')
+
 
 @app.route('/multi_csv', methods=['POST','GET'])
 def multi_csv():
@@ -114,7 +117,7 @@ def multi_csv():
             coord_csv_multi = list(zip(zip(csv_file.lat1, csv_file.lng1),zip(csv_file.lat2, csv_file.lng2)))
             results = pipeline_multi(coord_csv_multi)
             generate_results(results, './user_interface/templates/layout.html','./map.html','./user_interface/templates/results.html')
-            return render_template('solution_multi.html')
+            return render_template('results.html')
     return '''
     <!doctype html>
     <title>Confirm upload</title>
