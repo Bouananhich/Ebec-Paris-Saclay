@@ -56,12 +56,11 @@ def pipeline_uni(coords):
     for troncon in result:
         coords = result[troncon]
         for coord in coords:
-            Liste_resultat.append([coord, "street[troncon]", troncon[0],
+            Liste_resultat.append([coord[0], coord[1], "street[troncon]", troncon[0],
                                    troncon[1], Resultat_inter[troncon][coord], "city[troncon]"])
 
             list_data.append(
-                [coord[0], coord[1], (*troncon, *roads_dict[troncon]), ways_dict[coord]])
-
+                [coord, (*troncon, *roads_dict[troncon]), ways_dict[coord]])
     df = pd.DataFrame(Liste_resultat)
     df.columns = ['latitude', 'longitude', 'rue',
                   'debut_troncon', 'fin_troncon', 'num_arbre', 'ville']
