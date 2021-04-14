@@ -1,0 +1,215 @@
+<html><head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="width=device-width, initial-scale=1, maximum-scale=1.0" name="viewport"/>
+<title>ETS Home</title>
+<!-- CSS  -->
+<link href="/site.webmanifest" rel="manifest"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="{{ url_for('static', filename='css/materialize.css') }}" media="screen,projection" rel="stylesheet" type="text/css"/>
+<link href="{{ url_for('static', filename='css/style.css') }}" media="screen,projection" rel="stylesheet" type="text/css"/>
+<link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" rel="stylesheet"/>
+<meta content="text/html; charset=utf-8" http-equiv="content-type"/>
+<script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+<style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+<style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css" rel="stylesheet"/>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" rel="stylesheet"/>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css" rel="stylesheet"/>
+<meta content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<style>
+                #map_51e209b5799443f19d3f49e20902af19 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+</head><body><nav class="light-blue lighten-1" role="navigation">
+<div class="nav-wrapper container"><a class="brand-logo" href="/" id="logo-container">Epsilon Technical Solutions</a>
+<ul class="right hide-on-med-and-down">
+<li><a href="https://www.universite-paris-saclay.fr/evenements/ebec-paris-saclay-2021?fbclid=IwAR1t4TRu-wFWvwpfpnwWrAJBL9jj3RT40-Ore_pWiUde9Bmd_e0W6an0wlU">EBEC Paris Saclay</a></li>
+</ul>
+<ul class="right hide-on-med-and-down">
+<li><a href="https://www.centralesupelec.fr">CentraleSupélec</a></li>
+</ul>
+<ul class="sidenav" id="nav-mobile">
+<li><a href="#">Navbar Link</a></li>
+</ul>
+<a class="sidenav-trigger" data-target="nav-mobile" href="#"><i class="material-icons">menu</i></a>
+</div>
+</nav><div class="row" id = "div_map">
+<div class="folium-map" id="map_51e209b5799443f19d3f49e20902af19"></div>
+</div><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>latitude</th>
+      <th>longitude</th>
+      <th>rue</th>
+      <th>debut_troncon</th>
+      <th>fin_troncon</th>
+      <th>num_arbre</th>
+      <th>ville</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>48.895252</td>
+      <td>2.247123</td>
+      <td>street[troncon]</td>
+      <td>Rue de Belfort</td>
+      <td>Rue de Colmar</td>
+      <td>1</td>
+      <td>city[troncon]</td>
+    </tr>
+  </tbody>
+</table></div><footer class="page-footer orange">
+<div class="container">
+<div class="row">
+<div class="col l6 s12">
+<h5 class="white-text">The Team</h5>
+<p class="grey-text text-lighten-4">Epsilon Technical Solutions is a team of four CentraleSupélec students for the Hackaton EBEC Paris Saclay 2021. They are all second year students and you can find us by clicking on the links. Arnaud and Simon were finalist of the Hackaton Symbioticon 2020. </p>
+</div>
+<div class="col l3 s12">
+<h5 class="white-text">Our Linkedin links</h5>
+<ul>
+<li><a class="white-text" href="https://www.linkedin.com/in/simon-tronchi/">Simon Tronchi</a></li>
+<li><a class="white-text" href="https://www.linkedin.com/in/arnaud39/">Arnaud Petit</a></li>
+<li><a class="white-text" href="https://www.linkedin.com/in/matthieu-annequin/">Matthieu Annequin</a></li>
+<li><a class="white-text" href="https://www.linkedin.com/in/hicham-bouanani-7464b9195/">Hicham Bouanani</a></li>
+</ul>
+</div>
+<div class="col l3 s12">
+<a class="white-text" href="https://github.com/Bouananhich/Ebec-Paris-Saclay">
+<h5>Our GitHub</h5>
+</a>
+<ul>
+<li><a class="waves-effect waves-light btn-small" href="https://github.com/Bouananhich/Ebec-Paris-Saclay">GitHub <i class="fa fa-github"></i></a>
+</li></ul>
+</div>
+</div>
+</div>
+<div class="footer-copyright">
+<div class="container">
+        Made by Epsilon Technical Solutions
+      </div>
+</div>
+</footer></body><script src="{{ url_for('static', filename='js/materialize.js') }}"></script><script src="{{ url_for('static', filename='js/init.js') }}"></script><script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script><script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script><script src="https://code.jquery.com/jquery-1.12.4.min.js"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script><script>    
+    
+            var map_51e209b5799443f19d3f49e20902af19 = L.map(
+                "map_51e209b5799443f19d3f49e20902af19",
+                {
+                    center: [48.896205, 2.260466],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 14,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_bc60d1559c354430a817e01905bf0a84 = L.tileLayer(
+                "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"http://cartodb.com/attributions\"\u003eCartoDB\u003c/a\u003e, CartoDB \u003ca href =\"http://cartodb.com/attributions\"\u003eattributions\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_51e209b5799443f19d3f49e20902af19);
+        
+    
+            var marker_374da72aaef644769772448f6534a516 = L.marker(
+                [48.89525193, 2.247122897],
+                {}
+            ).addTo(map_51e209b5799443f19d3f49e20902af19);
+        
+    
+            var icon_67dcbac7b0774ab9ba8233759a5df3f3 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "none", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_374da72aaef644769772448f6534a516.setIcon(icon_67dcbac7b0774ab9ba8233759a5df3f3);
+        
+    
+        var popup_bab6735c7c7e4df8b395df7272c75421 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_e6f24d850b4746159b600189cbdfd31e = $(`<div id="html_e6f24d850b4746159b600189cbdfd31e" style="width: 100.0%; height: 100.0%;">Custom Marker 1</div>`)[0];
+            popup_bab6735c7c7e4df8b395df7272c75421.setContent(html_e6f24d850b4746159b600189cbdfd31e);
+        
+
+        marker_374da72aaef644769772448f6534a516.bindPopup(popup_bab6735c7c7e4df8b395df7272c75421)
+        ;
+
+        
+    
+    
+            marker_374da72aaef644769772448f6534a516.bindTooltip(
+                `<div>
+                     <strong>Point d'intérêt (48.89525193, 2.247122897) </strong>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var feature_group_8c91850c98e5435789b66bace323f6f3 = L.featureGroup(
+                {}
+            ).addTo(map_51e209b5799443f19d3f49e20902af19);
+        
+    
+            var poly_line_eafb218e58f14f4a8cbcfc01d2659539 = L.polyline(
+                [[48.8954354, 2.2468606], [48.8954023, 2.2469041], [48.8953155, 2.2470181], [48.8949829, 2.247455]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 10}
+            ).addTo(feature_group_8c91850c98e5435789b66bace323f6f3);
+        
+    
+        var popup_ce9cd971757a40a089065e61ad1b52cb = L.popup({"maxWidth": "100%"});
+
+        
+            var html_9b9c36fb81f543d8bef479357de128e9 = $(`<div id="html_9b9c36fb81f543d8bef479357de128e9" style="width: 100.0%; height: 100.0%;"><b>Tronçon Point (48.89525193, 2.247122897)</b></div>`)[0];
+            popup_ce9cd971757a40a089065e61ad1b52cb.setContent(html_9b9c36fb81f543d8bef479357de128e9);
+        
+
+        poly_line_eafb218e58f14f4a8cbcfc01d2659539.bindPopup(popup_ce9cd971757a40a089065e61ad1b52cb)
+        ;
+
+        
+    
+    
+            poly_line_eafb218e58f14f4a8cbcfc01d2659539.bindTooltip(
+                `<div>
+                     Tronçon Point (48.89525193, 2.247122897)
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var layer_control_71c494531aab4db697d7db9389f75a39 = {
+                base_layers : {
+                    "cartodbpositron" : tile_layer_bc60d1559c354430a817e01905bf0a84,
+                },
+                overlays :  {
+                    "Tron\u00e7on Point (48.89525193, 2.247122897)" : feature_group_8c91850c98e5435789b66bace323f6f3,
+                },
+            };
+            L.control.layers(
+                layer_control_71c494531aab4db697d7db9389f75a39.base_layers,
+                layer_control_71c494531aab4db697d7db9389f75a39.overlays,
+                {"autoZIndex": true, "collapsed": true, "position": "topright"}
+            ).addTo(map_51e209b5799443f19d3f49e20902af19);
+        
+</script>

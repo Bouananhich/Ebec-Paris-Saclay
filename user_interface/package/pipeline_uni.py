@@ -65,6 +65,6 @@ def pipeline_uni(coords):
     df.columns = ['latitude', 'longitude', 'rue',
                   'debut_troncon', 'fin_troncon', 'num_arbre', 'ville']
     visualisation_sections(list_data, 'map.html')
-    return df
-
     save()
+    
+    return df

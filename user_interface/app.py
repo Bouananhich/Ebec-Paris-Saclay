@@ -1,7 +1,9 @@
 from flask import Flask, redirect, render_template, request, url_for, flash
 from werkzeug.utils import secure_filename
 import pandas as pd
-import time
+from package import pipeline_multi, pipeline_uni
+from package.utils.utils import generate_results
+
 app = Flask(__name__)
 
 ALLOWED_EXTENSIONS = {'csv', 'txt'}
@@ -39,9 +41,9 @@ def uni_form():#faire les cas d'erreur car pas de string
             coord_input_uni.append((float(latitude),float(longitude)))
         except:
             continue
-        #pipeline_uni(coord_input_uni)
-        time.sleep(15)
-    return render_template('solution_uni.html')
+        results = pipeline_uni(coord_input_uni)
+        generate_results(results, './user_interface/templates/layout.html','./map.html','./user_interface/templates/results.html')
+    return render_template('results.html')
 
 @app.route('/uni_csv', methods=['POST','GET'])
 def uni_csv():
@@ -60,10 +62,10 @@ def uni_csv():
             csv_file = pd.read_csv(file)
             csv_file.colums = ['lat','lng']
             coord_csv_uni = list(zip(csv_file.lat, csv_file.lng))
-            print(coord_input_uni)
             flash('file successfully upload')
-            #pipeline_uni(coord_csv_uni)
-            return render_template('solution_uni.html')
+            results = pipeline_uni(coord_csv_uni)
+            generate_results(results, 'templates/layout.html','map.html','templates/results.html')
+            return render_template('results.html')
     
     return '''
     <!doctype html>
@@ -89,7 +91,8 @@ def multi_form():#faire la récupération
             coord_input_multi.append(((float(latitude1),float(longitude1)),(float(latitude2),float(longitude2))))
         except:
             continue
-        #pipeline_multi(coord_input_multi)
+        results = pipeline_multi(coord_input_multi)
+        generate_results(results, 'templates/layout.html','map.html','templates/results.html')
     return render_template('solution_multi.html')
 
 @app.route('/multi_csv', methods=['POST','GET'])
@@ -109,7 +112,8 @@ def multi_csv():
             csv_file = pd.read_csv(file)
             csv_file.colums = ['lat1','lng1','lat2','lng2']
             coord_csv_multi = list(zip(zip(csv_file.lat1, csv_file.lng1),zip(csv_file.lat2, csv_file.lng2)))
-            #pipeline_multi(coord_csv_multi)
+            results = pipeline_multi(coord_csv_multi)
+            generate_results(results, 'templates/layout.html','map.html','templates/results.html')
             return render_template('solution_multi.html')
     return '''
     <!doctype html>
