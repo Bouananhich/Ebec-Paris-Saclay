@@ -31,7 +31,8 @@ def supercharged_requests(*args, **kwargs):
     retrieved_data = requests.get(url=overpass_url, *args, **kwargs)
     counter_requests = 0
     while retrieved_data.status_code != 200:
-        logger.warning("Error from API. Requesting again...")
+        logger.warning(
+            f"Error {retrieved_data.status_code} from API not async. Requesting again...")
         retrieved_data = requests.get(url=overpass_url, *args, **kwargs)
         counter_requests += 1
         if counter_requests > 30:
@@ -50,13 +51,14 @@ async def async_request(
 ) -> Tuple[List, Tuple]:
     async with sem, httpx.AsyncClient() as client:
         timeout = httpx.Timeout(800.0)
-        await asyncio.sleep(delay_async * 0.01)
+        await asyncio.sleep(delay_async * 0.1)
         overpass_query_get_node = queries.query_nodes(id_node)
         retrieved_data = await client.get(
             f"{overpass_url}?data={overpass_query_get_node}", timeout=timeout)
         counter_requests = 0
         while retrieved_data.status_code != 200:
-            logger.warning("Error from API. Requesting again...")
+            logger.warning(
+                f"Error {retrieved_data.status_code} from API. Requesting async {delay_async} again...")
             retrieved_data = await client.get(
                 f"{overpass_url}?data={overpass_query_get_node}", timeout=timeout)
             counter_requests += 1
@@ -72,7 +74,8 @@ async def async_request(
             f"{overpass_url}?data={overpass_query_get_ways}", timeout=timeout)
         counter_requests = 0
         while retrieved_data.status_code != 200:
-            logger.warning("Error from API. Requesting again...")
+            logger.warning(
+                f"Error {retrieved_data.status_code} from API. Requesting async {delay_async} again...")
             retrieved_data = await client.get(
                 f"{overpass_url}?data={overpass_query_get_node}", timeout=timeout)
             counter_requests += 1

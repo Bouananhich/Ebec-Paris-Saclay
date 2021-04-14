@@ -4,14 +4,12 @@ from copy import deepcopy
 from operator import itemgetter
 from typing import Dict, List, Tuple
 
+import folium
+import pandas as pd
+from branca.element import Figure
+from bs4 import BeautifulSoup
 from numpy import array, cross, dot
 from numpy.linalg import norm
-
-import folium
-from branca.element import Figure
-
-import pandas as pd
-from bs4 import BeautifulSoup
 
 from ..API.get_nearest_street import get_nearest_street
 from ..API.get_ways_from_node import get_ways_from_node
@@ -50,6 +48,7 @@ def get_ways(
                             longitude=longitude)
     ways = get_ways_from_node(list_node=nodes)
     return ways, name
+
 
 def get_road_sections(
         intersection_list: List[Tuple],
@@ -139,6 +138,7 @@ def find_optimal(
     key_min = min(distances_dict.items(), key=itemgetter(1))[0]
     return key_min
 
+
 def visualisation_sections(
     list_data: List[Tuple],
     map_filename: str,
@@ -149,13 +149,15 @@ def visualisation_sections(
             in position 1: section of the road related with the point (outpput of find_optimal) with the type List['str','str',tuple,tuple] as the output of get_road_section,
             in position 2: list of all the node of a street (output of get_ways_from_node).
     :param map_filename: name of the map HTML code file.
-    return None: the function just save the code with the correct path.  
+    return None: the function just save the code with the correct path.
     """
-    
-    figure = Figure(height=550,width=750)
-    map_display = folium.Map(location=[48.896205, 2.260466],tiles='cartodbpositron',zoom_start=14)
+
+    figure = Figure(height=550, width=750)
+    map_display = folium.Map(
+        location=[48.896205, 2.260466], tiles='cartodbpositron', zoom_start=14)
     figure.add_child(map_display)
-    colors = ['red', 'blue', 'green', 'purple', 'orange', 'darkred', 'lightred', 'beige', 'darkblue', 'darkgreen', 'cadetblue', 'darkpurple', 'white', 'pink', 'lightblue', 'lightgreen', 'gray', 'black', 'lightgray']
+    colors = ['red', 'blue', 'green', 'purple', 'orange', 'darkred', 'lightred', 'beige', 'darkblue', 'darkgreen',
+              'cadetblue', 'darkpurple', 'white', 'pink', 'lightblue', 'lightgreen', 'gray', 'black', 'lightgray']
     color_index = 0
     for data in list_data:
         latitude, longitude = data[0]
@@ -164,15 +166,20 @@ def visualisation_sections(
         begin_coordinates = section[2]
         end_coordinates = section[3]
         coordinates = [node[1] for node in list_node_street]
-        coordinates = coordinates[coordinates.index(begin_coordinates):coordinates.index(end_coordinates)+1]
-        feature_group = folium.FeatureGroup(f"Tronçon Point ({latitude}, {longitude})")
-        folium.vector_layers.PolyLine(coordinates, popup=f'<b>Tronçon Point ({latitude}, {longitude})</b>', tooltip=f'Tronçon Point ({latitude}, {longitude})', color=colors[color_index%len(colors)], weight=10).add_to(feature_group)
-        folium.Marker(location=[latitude,longitude], popup='Custom Marker 1', tooltip=f'<strong>Point d\'intérêt ({latitude}, {longitude}) </strong>', icon=folium.Icon(color=colors[color_index%len(colors)], icon='none')).add_to(map_display)
+        coordinates = coordinates[coordinates.index(
+            begin_coordinates):coordinates.index(end_coordinates) + 1]
+        feature_group = folium.FeatureGroup(
+            f"Tronçon Point ({latitude}, {longitude})")
+        folium.vector_layers.PolyLine(coordinates, popup=f'<b>Tronçon Point ({latitude}, {longitude})</b>',
+                                      tooltip=f'Tronçon Point ({latitude}, {longitude})', color=colors[color_index % len(colors)], weight=10).add_to(feature_group)
+        folium.Marker(location=[latitude, longitude], popup='Custom Marker 1', tooltip=f'<strong>Point d\'intérêt ({latitude}, {longitude}) </strong>', icon=folium.Icon(
+            color=colors[color_index % len(colors)], icon='none')).add_to(map_display)
         color_index += 1
         feature_group.add_to(map_display)
     folium.LayerControl().add_to(map_display)
     map_display.save(map_filename)
     return None
+
 
 def generate_results(
     results_dataframe: pd.core.frame.DataFrame,
@@ -203,11 +210,12 @@ def generate_results(
     body_map = soup_map.find('body')
     scripts_map = soup_map.findAll('script')
     dataframe_html = results_dataframe.to_html()
-    
-    head = str(head_layout)[:-7]+str(head_map)[6:]
-    body = '<body>'+str(navigation)+'<div class="row" id = "div_map">'+str(body_map)[6:-7]+'</div>'+dataframe_html+'</div>'+str(footer_layout)+'</body>'
-    
-    message = '<html>'+head+body
+
+    head = str(head_layout)[:-7] + str(head_map)[6:]
+    body = '<body>' + str(navigation) + '<div class="row" id = "div_map">' + str(body_map)[
+        6:-7] + '</div>' + dataframe_html + '</div>' + str(footer_layout) + '</body>'
+
+    message = '<html>' + head + body
     f = open(results_filename, 'w')
     f.write(message)
     for script in scripts_layout:
@@ -216,3 +224,68 @@ def generate_results(
         f.write(str(script))
     f.close()
     return None
+
+
+def get_order_in_segment(
+        list_coordinates: List[Tuple],
+        section: List[List],
+) -> Dict[Tuple, int]:
+    """Give the order of coordinates in the segment.
+
+    :param list_coordinates: List of the coordinates of the points you want to order.
+    :param section: names of the street that bound the segment, coordinates of the node
+    of the bounds of the segment.
+
+    return position:keys are the coordinates, values are their position in the street
+    """
+    reference_point_coordinates = section[2]
+    reference_point = array(reference_point_coordinates)
+    distance = dict()
+    for x in list_coordinates:
+        point = array(x)
+        distance[x] = norm(reference_point - point)
+    position = dict()
+    position_in_street = 1
+    while bool(distance):
+        coordinates = min(distance, key=lambda k: distance[k])
+        distance.pop(coordinates)
+        position[coordinates] = position_in_street
+        position_in_street += 1
+    return position
+
+
+def merge_sections(
+        section_1: List[List],
+        section_2: List[List],
+        list_sections: List[List],
+) -> List[List]:
+    """Give the merge name of the streets that bound the merge sections.
+
+    :param section_1:first section to merge.
+    :param section_2:second section to merge.
+    :param list_sections: output of get_road_sections.
+    return merge_sections: names of the street that bound the segment, coordinates of the node
+    of the bounds of the segment
+    """
+    if (section_1 in list_sections) and (section_2 in list_sections):
+        is_seen = False
+        merge_sections = [0, 0, 0, 0]
+        for x in list_sections:
+            if x == section_1:
+                if is_seen:
+                    merge_sections[1] = section_1[1]
+                    merge_sections[3] = section_1[3]
+                else:
+                    merge_sections[0] = section_1[0]
+                    merge_sections[2] = section_1[2]
+                is_seen = not is_seen
+            elif x == section_2:
+                if is_seen:
+                    merge_sections[1] = section_2[1]
+                    merge_sections[3] = section_2[3]
+                else:
+                    merge_sections[0] = section_2[0]
+                    merge_sections[2] = section_2[2]
+                is_seen = not is_seen
+        return merge_sections
+    return 'merge impossible'
