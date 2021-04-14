@@ -1,9 +1,11 @@
 import logging
 
+import pandas as pd
+
 from .supercharged_requests import save
 from .utils.utils import (conversion_list_dict, distance_from_segment,
-                          find_optimal, get_order_in_segment,
-                          get_road_sections, get_ways)
+                          find_optimal, generate_results, get_order_in_segment,
+                          get_road_sections, get_ways, visualisation_sections)
 
 #from  .API.get_nearest_city import (get_nearest_city)
 #from  .API.get_nearest_street import (get_nearest_street)
@@ -11,15 +13,19 @@ from .utils.utils import (conversion_list_dict, distance_from_segment,
 log_level = logging.INFO
 logging.getLogger("package").setLevel(log_level)
 
+coords = [(48.89535, 2.24697), (48.89529, 2.24705),
+          (48.89518, 2.2472), (48.89394122, 2.247959188)]
 
-def test_copy():
-    coords = [(48.89535, 2.24697), (48.89529, 2.24705),
-              (48.89518, 2.2472), (48.89394122, 2.247959188)]
+
+def pipeline_uni(coords):
+
     result = {}
     roads_dict = {}
+    ways_dict = {}
     for coord in coords:
         ways, name = get_ways(*coord)
         roads = get_road_sections(intersection_list=ways, road_name=name)
+        ways_dict[coord] = ways
         roads_dict.update(conversion_list_dict(roads))
         dict_distances = distance_from_segment(coord, roads_dict)
         troncon = find_optimal(dict_distances)
@@ -36,21 +42,29 @@ def test_copy():
         coords = result[troncon]
         if len(coords) == 1:
             test = {coords[0]: 1}
-        noeuds_troncon = roads_dict[troncon]
-        section = [troncon[0], troncon[1],
-                   noeuds_troncon[0], noeuds_troncon[1]]
-        test = get_order_in_segment(coords, section)
+        else:
+            noeuds_troncon = roads_dict[troncon]
+            section = [troncon[0], troncon[1],
+                       noeuds_troncon[0], noeuds_troncon[1]]
+            test = get_order_in_segment(coords, section)
         # city[troncon]=get_nearest_city(coords[0][0],coords[0][1])
         # street[troncon]=get_nearest_street(coords[0][0],coords[0][1])
         Resultat_inter[troncon] = test
-        # print(test)
 
     Liste_resultat = []
+    list_data = []
     for troncon in result:
         coords = result[troncon]
         for coord in coords:
-            Liste_resultat.append([coord, "street[troncon]", troncon[0],
+            Liste_resultat.append([coord[0], coord[1], "street[troncon]", troncon[0],
                                    troncon[1], Resultat_inter[troncon][coord], "city[troncon]"])
 
-    print(Liste_resultat)
+            list_data.append(
+                [coord, (*troncon, *roads_dict[troncon]), ways_dict[coord]])
+    df = pd.DataFrame(Liste_resultat)
+    df.columns = ['latitude', 'longitude', 'rue',
+                  'debut_troncon', 'fin_troncon', 'num_arbre', 'ville']
+    visualisation_sections(list_data, 'map.html')
+    return df
+
     save()

@@ -10,7 +10,6 @@
 .aws
 *.icloud
 *.ipynb_checkpoints/
-cache/
 *.pyc
 ssh_key
 ssh_key.pub
