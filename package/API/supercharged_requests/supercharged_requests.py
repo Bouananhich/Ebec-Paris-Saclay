@@ -74,7 +74,8 @@ async def async_request(
             f"{overpass_url}?data={overpass_query_get_ways}", timeout=timeout)
         counter_requests = 0
         while retrieved_data.status_code != 200:
-            logger.warning("Error from API. Requesting again...")
+            logger.warning(
+                f"Error {retrieved_data.status_code} from API. Requesting async {delay_async} again...")
             retrieved_data = await client.get(
                 f"{overpass_url}?data={overpass_query_get_node}", timeout=timeout)
             counter_requests += 1
