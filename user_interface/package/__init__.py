@@ -18,12 +18,12 @@ __all__ = ["get_nearest_city", "get_nearest_street", "get_ways_from_node", "get_
 
 # Create logger
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.CRITICAL)
+logger.setLevel(logging.DEBUG)
 
-"""# Create console handler
+# Create console handler
 ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)
 
 ch.setFormatter(CustomFormatter())
 
-logger.addHandler(ch)"""
+logger.addHandler(ch)

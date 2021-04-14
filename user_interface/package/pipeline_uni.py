@@ -1,21 +1,19 @@
 import logging
-
 import pandas as pd
-
+import unicodedata
 from .supercharged_requests import save
 from .utils.utils import (conversion_list_dict, distance_from_segment,
                           find_optimal, generate_results, get_order_in_segment,
                           get_road_sections, get_ways, visualisation_sections)
 
-#from  .API.get_nearest_city import (get_nearest_city)
-#from  .API.get_nearest_street import (get_nearest_street)
+from  .API.get_nearest_city import (get_nearest_city)
+from  .API.get_nearest_street import (get_nearest_street)
 
 log_level = logging.INFO
 logging.getLogger("package").setLevel(log_level)
 
 coords = [(48.89535, 2.24697), (48.89529, 2.24705),
           (48.89518, 2.2472), (48.89394122, 2.247959188)]
-
 
 def pipeline_uni(coords):
 
@@ -47,8 +45,8 @@ def pipeline_uni(coords):
             section = [troncon[0], troncon[1],
                        noeuds_troncon[0], noeuds_troncon[1]]
             test = get_order_in_segment(coords, section)
-        # city[troncon]=get_nearest_city(coords[0][0],coords[0][1])
-        # street[troncon]=get_nearest_street(coords[0][0],coords[0][1])
+        city[troncon] = ''.join((c for c in unicodedata.normalize('NFD', get_nearest_city(coords[0][0], coords[0][1])) if unicodedata.category(c) != 'Mn')) # Remove accent
+        street[troncon] = ''.join((c for c in unicodedata.normalize('NFD', get_nearest_street(coords[0][0], coords[0][1])['tags']['name']) if unicodedata.category(c) != 'Mn')) # Remove accent 
         Resultat_inter[troncon] = test
 
     Liste_resultat = []
@@ -56,8 +54,8 @@ def pipeline_uni(coords):
     for troncon in result:
         coords = result[troncon]
         for coord in coords:
-            Liste_resultat.append([coord[0], coord[1], "street[troncon]", troncon[0],
-                                   troncon[1], Resultat_inter[troncon][coord], "city[troncon]"])
+            Liste_resultat.append([coord[0], coord[1], street[troncon], ''.join((c for c in unicodedata.normalize('NFD', troncon[0]) if unicodedata.category(c) != 'Mn')),
+                                   ''.join((c for c in unicodedata.normalize('NFD', troncon[1]) if unicodedata.category(c) != 'Mn')), Resultat_inter[troncon][coord], city[troncon]])
 
             list_data.append(
                 [coord, (*troncon, *roads_dict[troncon]), ways_dict[coord]])
