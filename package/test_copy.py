@@ -1,5 +1,6 @@
 import logging
 
+from .supercharged_requests import save
 from .utils.utils import (conversion_list_dict, distance_from_segment,
                           find_optimal, get_order_in_segment,
                           get_road_sections, get_ways)
@@ -52,6 +53,4 @@ def test_copy():
                                    troncon[1], Resultat_inter[troncon][coord], "city[troncon]"])
 
     print(Liste_resultat)
-    # df=pd.dataframe(Liste_resultat)
-
-    #coord = 48.89394122, 2.247959188
+    save()
