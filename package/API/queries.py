@@ -12,7 +12,8 @@ def query_city(
     :param latitude: Latitude of the point.
     :param longitude: Longitude of the point.
 
-    return overpass_query : build the query to find the nearest city from your point
+    return overpass_query : build the query to find the nearest city from your
+    point
     """
     overpass_query = f"""[out:json][timeout:800];
                         (node["place"="town"](around:{rad},{latitude},{longitude});
@@ -35,7 +36,8 @@ def query_street(
     :param latitude: Latitude of the point.
     :param longitude: Longitude of the point.
 
-    return overpass_query : build the query to find the nearest street from your point
+    return overpass_query : build the query to find the nearest street
+    from your point
     """
     overpass_query = f"""[out:json][timeout:800];
                     way
@@ -67,10 +69,11 @@ def query_nodes(
 
     :param id_node: Integer that is a primary key for nodes.
 
-    return overpass_query_get_node : build the query to get the node associated to the id
+    return overpass_query_get_node : build the query to get the node associated
+    to the id
     """
-    overpass_query_get_node = f"""[out:json][timeout:800];
-                        node({id_node});
-                        out;
-                        """
+    overpass_query_get_node = f"""[out:json][timeout:800];node({id_node});out;"""
     return overpass_query_get_node
+
+
+__all__ = ["query_city", "query_street", "query_ways", "query_nodes"]

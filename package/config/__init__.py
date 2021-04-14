@@ -1,5 +1,6 @@
 """Load yaml config file."""
 from contextlib import contextmanager
+
 import yaml
 
 
@@ -22,3 +23,5 @@ with opened_w_error("config.yaml") as (config_file, err):
         print("Error while reading config file")
     else:
         data = yaml.load(config_file, Loader=yaml.FullLoader)
+
+__all__ = ["data"]

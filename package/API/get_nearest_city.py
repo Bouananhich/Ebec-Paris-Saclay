@@ -25,16 +25,13 @@ def get_nearest_city(
         "Binary_search").get("lower_bound_radius", 0)
     max_iter_before_increased_radius = config.data.get("Nearest_city").get(
         "Binary_search").get("iter_before_increased_radius", 10)
-    overpass_url = config.data.get("API").get(
-        "overpass_url", "http://overpass-api.de/api/interpreter")
 
     rad = (radplus + radmoins) / 2
     overpass_query = query_city(
         rad=rad, latitude=latitude, longitude=longitude)
     logging.info(
         "Using openstreetmap API to get nearest city. This can take a while.. ☕")
-    response = requests.supercharged_requests(overpass_url,
-                                              params={'data': overpass_query})
+    response = requests.supercharged_requests(params={'data': overpass_query})
     data = response.json().get('elements')
     logging.info("Got the response")
 
@@ -54,7 +51,7 @@ def get_nearest_city(
         rad = (radplus + radmoins) / 2
         overpass_query = query_city(
             rad=rad, latitude=latitude, longitude=longitude)
-        response = requests.supercharged_requests(overpass_url,
-                                                  params={'data': overpass_query})
+        response = requests.supercharged_requests(
+            params={'data': overpass_query})
         data = response.json().get('elements')
     return data[0]['tags']['name']

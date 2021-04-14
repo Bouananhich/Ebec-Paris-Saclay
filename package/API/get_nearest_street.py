@@ -27,8 +27,6 @@ def get_nearest_street(
         "Binary_search").get("lower_bound_radius", 0)
     max_iter_before_increased_radius = config.data.get("Nearest_street").get(
         "Binary_search").get("iter_before_increased_radius", 10)
-    overpass_url = config.data.get("API").get(
-        "overpass_url", "http://overpass-api.de/api/interpreter")
 
     rad = (radplus + radmoins) / 2
     overpass_query = query_street(
@@ -36,8 +34,7 @@ def get_nearest_street(
     logging.info(
         "Using openstreetmap API to get nearest street. This can take a while.. ☕")
 
-    response = requests.supercharged_requests(overpass_url,
-                                              params={'data': overpass_query})
+    response = requests.supercharged_requests(params={'data': overpass_query})
     data = response.json()
     logging.info("Got the response")
     ways = [x for x in data['elements'] if x['type'] == 'way']
@@ -61,8 +58,8 @@ def get_nearest_street(
         rad = (radplus + radmoins) / 2
         overpass_query = query_street(
             rad=rad, latitude=latitude, longitude=longitude)
-        response = requests.supercharged_requests(overpass_url,
-                                                  params={'data': overpass_query})
+        response = requests.supercharged_requests(
+            params={'data': overpass_query})
         data = response.json()
         ways = [x for x in data['elements'] if x['type'] == 'way']
 
