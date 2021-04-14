@@ -24,7 +24,6 @@ def supercharged_requests(*args, **kwargs):
     counter_requests = 0
     while retrieved_data.status_code != 200:
         logger.warning("Error from API. Requesting again...")
-        logger.warning(retrieved_data.status_code)
         retrieved_data = requests.get(*args, **kwargs)
         counter_requests += 1
         if counter_requests > 30:
