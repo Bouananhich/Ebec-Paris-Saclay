@@ -161,3 +161,39 @@ def get_order_in_segment(
         position_in_street += 1
     return position
 
+def merge_sections(
+        section_1:List[List],
+        section_2:List[List],
+        list_sections:List[List],
+)->List[List]:
+    """Give the merge name of the streets that bound the merge sections.
+
+    :param section_1:first section to merge.
+    :param section_2:second section to merge.
+    :param list_sections: output of get_road_sections.
+    return merge_sections: names of the street that bound the segment, coordinates of the node 
+    of the bounds of the segment
+    """
+    if (section_1 in list_sections) and (section_2 in list_sections):
+        is_seen = False
+        merge_sections = [0,0,0,0]
+        for x in list_sections:
+            if x == section_1:
+                if is_seen:
+                    merge_sections[1] = section_1[1]
+                    merge_sections[3] = section_1[3]
+                else:
+                    merge_sections[0] = section_1[0]
+                    merge_sections[2] = section_1[2]
+                is_seen = not is_seen
+            elif x == section_2:
+                if is_seen:
+                    merge_sections[1] = section_2[1]
+                    merge_sections[3] = section_2[3]
+                else:
+                    merge_sections[0] = section_2[0]
+                    merge_sections[2] = section_2[2]
+                is_seen = not is_seen
+        return merge_sections
+    return 'merge impossible'
+
