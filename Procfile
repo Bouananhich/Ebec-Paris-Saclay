@@ -1,1 +1,1 @@
-web: gunicorn app: ./user_interface/app
+web: gunicorn hello: ./user_interface/app
