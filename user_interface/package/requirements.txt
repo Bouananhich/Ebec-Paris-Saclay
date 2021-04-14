@@ -1,0 +1,9 @@
+requests==2.25.1
+branca==0.4.2
+folium==0.0.0
+pandas==1.2.3
+joblib==0.15.1
+httpx==0.17.1
+numpy==1.19.2
+beautifulsoup4==4.9.3
+PyYAML==5.4.1
