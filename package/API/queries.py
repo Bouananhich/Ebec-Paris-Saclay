@@ -15,13 +15,7 @@ def query_city(
     return overpass_query : build the query to find the nearest city from your
     point
     """
-    overpass_query = f"""[out:json][timeout:800];
-                        (node["place"="town"](around:{rad},{latitude},{longitude});
-                        node["place"="city"](around:{rad},{latitude},{longitude}););
-                        node["place"="village"](around:{rad},{latitude},{longitude}););
-                        out body;
-                        >;
-                        out skel qt;"""
+    overpass_query = f"""[out:json][timeout:800];(node["place"="town"](around:{rad},{latitude},{longitude});node["place"="city"](around:{rad},{latitude},{longitude}););node["place"="village"](around:{rad},{latitude},{longitude}););out body;>;out skel qt;"""
     return overpass_query
 
 
@@ -39,12 +33,7 @@ def query_street(
     return overpass_query : build the query to find the nearest street
     from your point
     """
-    overpass_query = f"""[out:json][timeout:800];
-                    way
-                      (around:{rad},{latitude},{longitude})
-                      [name];
-                    (._;>;);
-                    out;"""
+    overpass_query = f"[out:json][timeout:800];way(around:{rad},{latitude},{longitude})[name];(._;>;);out;"
     return overpass_query
 
 
@@ -53,12 +42,7 @@ def query_ways(
         longitude: float,
 ) -> str:
     """."""
-    overpass_query_get_ways = f"""[out:json][timeout:800];
-                                    way
-                                      (around:2,{latitude},{longitude})
-                                      [name];
-                                    (._;>;);
-                                    out;"""
+    overpass_query_get_ways = f"[out:json][timeout:800];way(around:2,{latitude},{longitude})[name];(._;>;);out;"
     return overpass_query_get_ways
 
 
@@ -72,7 +56,7 @@ def query_nodes(
     return overpass_query_get_node : build the query to get the node associated
     to the id
     """
-    overpass_query_get_node = f"""[out:json][timeout:800];node({id_node});out;"""
+    overpass_query_get_node = f"[out:json][timeout:800];node({id_node});out;"
     return overpass_query_get_node
 
 

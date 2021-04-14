@@ -3,8 +3,8 @@ import logging
 from typing import Dict
 
 from .. import config
+from ..supercharged_requests import requests
 from .queries import query_street
-from .supercharged_requests import requests
 
 logger = logging.getLogger(__name__)
 
@@ -34,8 +34,7 @@ def get_nearest_street(
     logging.info(
         "Using openstreetmap API to get nearest street. This can take a while.. ☕")
 
-    response = requests.supercharged_requests(params={'data': overpass_query})
-    data = response.json()
+    data = requests.supercharged_requests(params={'data': overpass_query})
     logging.info("Got the response")
     ways = [x for x in data['elements'] if x['type'] == 'way']
 
@@ -58,9 +57,8 @@ def get_nearest_street(
         rad = (radplus + radmoins) / 2
         overpass_query = query_street(
             rad=rad, latitude=latitude, longitude=longitude)
-        response = requests.supercharged_requests(
+        data = requests.supercharged_requests(
             params={'data': overpass_query})
-        data = response.json()
         ways = [x for x in data['elements'] if x['type'] == 'way']
 
     return ways[0]

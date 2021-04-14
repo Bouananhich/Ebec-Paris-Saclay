@@ -2,8 +2,8 @@
 import asyncio
 from typing import List, Tuple
 
+from ..supercharged_requests import requests
 from .queries import query_nodes, query_ways
-from .supercharged_requests import requests
 
 
 async def get_ways_from_node_async(
@@ -12,7 +12,7 @@ async def get_ways_from_node_async(
     """Async implementation."""
 
     task_list = []
-    sem = asyncio.Semaphore(1)
+    sem = asyncio.Semaphore(2)
     for indice_delay, id_node in enumerate(list_node):
 
         task_list.append(
