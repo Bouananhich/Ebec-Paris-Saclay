@@ -1,7 +1,7 @@
 from flask import Flask, redirect, render_template, request, url_for, flash
-import os
 from werkzeug.utils import secure_filename
-
+import pandas as pd
+import time
 app = Flask(__name__)
 
 ALLOWED_EXTENSIONS = {'csv', 'txt'}
@@ -24,16 +24,23 @@ def solution_uni():
 def solution_multi():
     return render_template('solution_multi.html')
 
-
+@app.route('/results')
+def results():
+    return render_template('results.html')
 
 @app.route('/uni_form', methods=['POST'])
 def uni_form():#faire les cas d'erreur car pas de string
     data = request.form.to_dict(flat=False)
-    print(data)
-    coord_input = []
+    coord_input_uni = []
     for i in range(len(data)//2):
-        coord_input.append((float(data.get('latitude'+str(i+1),[0])[0]),float(data.get('longitude'+str(i+1),[0])[0])))
-    print(coord_input)
+        latitude = data.get('latitude'+str(i+1),[0])[0]
+        longitude = data.get('longitude'+str(i+1),[0])[0]
+        try:
+            coord_input_uni.append((float(latitude),float(longitude)))
+        except:
+            continue
+        #pipeline_uni(coord_input_uni)
+        time.sleep(15)
     return render_template('solution_uni.html')
 
 @app.route('/uni_csv', methods=['POST','GET'])
@@ -50,15 +57,18 @@ def uni_csv():
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(filename)
+            csv_file = pd.read_csv(file)
+            csv_file.colums = ['lat','lng']
+            coord_csv_uni = list(zip(csv_file.lat, csv_file.lng))
+            print(coord_input_uni)
             flash('file successfully upload')
+            #pipeline_uni(coord_csv_uni)
             return render_template('solution_uni.html')
     
     return '''
     <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
+    <title>Confirm the Upload</title>
+    <h1>Confirm the Upload</h1>
     <form method=post enctype=multipart/form-data>
       <input type=file name=file>
       <input type=submit value=Upload>
@@ -66,13 +76,23 @@ def uni_csv():
     '''
 
 
-@app.route('/multi_form', methods=['POST'])
+@app.route('/multi_form', methods=['POST','GET'])
 def multi_form():#faire la récupération
     data = request.form.to_dict(flat=False)
-    print(data)
+    coord_input_multi = []
+    for i in range(len(data)//4):
+        latitude1 = data.get('1latitude'+str(i+1),[0])[0]
+        longitude1 = data.get('1longitude'+str(i+1),[0])[0]
+        latitude2 = data.get('2latitude'+str(i+1),[0])[0]
+        longitude2 = data.get('2longitude'+str(i+1),[0])[0]
+        try:
+            coord_input_multi.append(((float(latitude1),float(longitude1)),(float(latitude2),float(longitude2))))
+        except:
+            continue
+        #pipeline_multi(coord_input_multi)
     return render_template('solution_multi.html')
 
-@app.route('/multi_csv', methods=['POST'])
+@app.route('/multi_csv', methods=['POST','GET'])
 def multi_csv():
     if request.method == 'POST':
         # check if the post request has the file part
@@ -86,13 +106,15 @@ def multi_csv():
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(filename)
+            csv_file = pd.read_csv(file)
+            csv_file.colums = ['lat1','lng1','lat2','lng2']
+            coord_csv_multi = list(zip(zip(csv_file.lat1, csv_file.lng1),zip(csv_file.lat2, csv_file.lng2)))
+            #pipeline_multi(coord_csv_multi)
             return render_template('solution_multi.html')
     return '''
     <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
+    <title>Confirm upload</title>
+    <h1>Confirm upload</h1>
     <form method=post enctype=multipart/form-data>
       <input type=file name=file>
       <input type=submit value=Upload>
