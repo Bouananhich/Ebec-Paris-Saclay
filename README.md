@@ -5,8 +5,15 @@ Our tool is designed to meet all objectives with resilience while managing to gi
 ## Installation 
 ```bash
 pip install -r requirements.txt
-```
-## Usage 
+``` 
+
+## Example of use 
+![GitHub Logo](/images/capture.jpg)
+Format: ![Alt Text](url)
+
+## Technical explanations 
+
+
 
 ## Contributors 
 
