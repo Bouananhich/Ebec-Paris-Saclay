@@ -6,8 +6,10 @@ Our tool is designed to meet all objectives with resilience while managing to gi
 ```bash
 pip install -r requirements.txt
 ``` 
-## Launch
-
+## Launch the web app
+```bash
+python user_interface/app.py
+``` 
 
 ## Example of use 
 ![Click here to see the interface](./Capture2.JPG)
