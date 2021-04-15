@@ -8,6 +8,7 @@ import folium
 import pandas as pd
 from branca.element import Figure
 from bs4 import BeautifulSoup
+import unicodedata
 from numpy import array, cross, dot
 from numpy.linalg import norm
 
@@ -172,7 +173,51 @@ def visualisation_sections(
             f"Tronçon Point ({latitude}, {longitude})")
         folium.vector_layers.PolyLine(coordinates, popup=f'<b>Tronçon Point ({latitude}, {longitude})</b>',
                                       tooltip=f'Tronçon Point ({latitude}, {longitude})', color=colors[color_index % len(colors)], weight=10).add_to(feature_group)
-        folium.Marker(location=[latitude, longitude], popup='Custom Marker 1', tooltip=f'<strong>Point d\'intérêt ({latitude}, {longitude}) </strong>', icon=folium.Icon(
+        folium.Marker(location=[latitude, longitude], popup='Custom Marker 1', tooltip=f'<strong>Point d\'interet ({latitude}, {longitude}) </strong>', icon=folium.Icon(
+            color=colors[color_index % len(colors)], icon='none')).add_to(map_display)
+        color_index += 1
+        feature_group.add_to(map_display)
+    folium.LayerControl().add_to(map_display)
+    map_display.save(map_filename)
+    return None
+
+def visualisation_sections_multi(
+    list_data: List[Tuple],
+    map_filename: str,
+) -> None:
+    """Save the HTML code of the map visualisation. Every tuple correspond to a different point.
+    :param list_data: list of tuples which contains
+            in position 0: coordinates of the point as a tuple (latitude,longitude),
+            in position 1: section of the road related with the point (outpput of find_optimal) with the type List['str','str',tuple,tuple] as the output of get_road_section,
+            in position 2: list of all the node of a street (output of get_ways_from_node).
+    :param map_filename: name of the map HTML code file.
+    return None: the function just save the code with the correct path.
+    """
+
+    figure = Figure(height=550, width=750)
+    map_display = folium.Map(
+        location=[48.896205, 2.260466], tiles='cartodbpositron', zoom_start=14)
+    figure.add_child(map_display)
+    colors = ['red', 'blue', 'green', 'purple', 'orange', 'darkred', 'lightred', 'beige', 'darkblue', 'darkgreen',
+              'cadetblue', 'darkpurple', 'white', 'pink', 'lightblue', 'lightgreen', 'gray', 'black', 'lightgray']
+    color_index = 0
+    for data in list_data:
+        latitude1, longitude1 = data[0]
+        latitude2, longitude2 = data[1]
+        section = data[2]
+        list_node_street = data[3]
+        begin_coordinates = section[2]
+        end_coordinates = section[3]
+        coordinates = [node[1] for node in list_node_street]
+        coordinates = coordinates[coordinates.index(
+            begin_coordinates):coordinates.index(end_coordinates) + 1]
+        feature_group = folium.FeatureGroup(
+            f"Tronçon Point ({latitude1}, {longitude1})")
+        folium.vector_layers.PolyLine(coordinates, popup=f'<b>Tronçon Point ({latitude1}, {longitude1})</b>',
+                                      tooltip=f'Tronçon Point ({latitude1}, {longitude1})', color=colors[color_index % len(colors)], weight=10).add_to(feature_group)
+        folium.Marker(location=[latitude1, longitude1], popup='Custom Marker 1', tooltip=f'<strong>Point d\'interet ({latitude1}, {longitude1}) </strong>', icon=folium.Icon(
+            color=colors[color_index % len(colors)], icon='none')).add_to(map_display)
+        folium.Marker(location=[latitude2, longitude2], popup='Custom Marker 1', tooltip=f'<strong>Point d\'interet ({latitude2}, {longitude2}) </strong>', icon=folium.Icon(
             color=colors[color_index % len(colors)], icon='none')).add_to(map_display)
         color_index += 1
         feature_group.add_to(map_display)
@@ -220,10 +265,13 @@ def generate_results(
     f.write(message)
     for script in scripts_layout:
         f.write(str(script))
+        message = message + str(script)
     for script in scripts_map:
         f.write(str(script))
+        message =  message + str(script)
     f.close()
-    return None
+    message_html = ''.join((c for c in unicodedata.normalize('NFD', message) if unicodedata.category(c) != 'Mn')) # Remove accent
+    return message_html
 
 
 def get_order_in_segment(
@@ -269,7 +317,9 @@ def merge_sections(
     """
     if (section_1 in list_sections) and (section_2 in list_sections):
         is_seen = False
-        merge_sections = [0, 0, 0, 0]
+        merge_sections = [0,0,0,0]
+        if section_1 == section_2:
+            return section_1
         for x in list_sections:
             if x == section_1:
                 if is_seen:
