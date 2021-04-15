@@ -13,3 +13,4 @@ pip install -r requirements.txt
 Arnaud Petit, Simon Tronchi, Matthieu Annequin and Hicham Bouanani
 
 ## License
+[MIT](https://choosealicense.com/licenses/mit/)
