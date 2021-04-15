@@ -16,6 +16,7 @@ def pipeline_multi(list_input):
     resultat=[]
     city = {}
     ways_dict = {}
+    list_data = list()
     for coords in list_input:
         
         result={}
@@ -39,12 +40,11 @@ def pipeline_multi(list_input):
                 city[coords] = ''.join((c for c in unicodedata.normalize('NFD', get_nearest_city(coords[0][0], coords[0][1])) if unicodedata.category(c) != 'Mn')) # Remove accent
                 flag = not flag
             section.append([*troncon,*roads_dict[troncon]])
-        list_data = list()
         for tron in result:
             list_data.append(
                 [coords[0],coords[1], (*tron, *roads_dict[tron]), ways_dict[coords[0]]])
             resultat_coords=merge_sections(section[0],section[1],roads)
-            print(city,resultat_coords)
+            print(resultat_coords)
             inter=[coords[0][0],coords[0][1],coords[1][0],coords[1][1],''.join((c for c in unicodedata.normalize('NFD', resultat_coords[0]) if unicodedata.category(c) != 'Mn')),''.join((c for c in unicodedata.normalize('NFD', resultat_coords[1]) if unicodedata.category(c) != 'Mn')),city[coords]]
     resultat.append(inter)
 

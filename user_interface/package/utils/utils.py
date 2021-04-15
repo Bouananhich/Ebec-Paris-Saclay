@@ -8,6 +8,7 @@ import folium
 import pandas as pd
 from branca.element import Figure
 from bs4 import BeautifulSoup
+import unicodedata
 from numpy import array, cross, dot
 from numpy.linalg import norm
 
@@ -172,7 +173,7 @@ def visualisation_sections(
             f"Tronçon Point ({latitude}, {longitude})")
         folium.vector_layers.PolyLine(coordinates, popup=f'<b>Tronçon Point ({latitude}, {longitude})</b>',
                                       tooltip=f'Tronçon Point ({latitude}, {longitude})', color=colors[color_index % len(colors)], weight=10).add_to(feature_group)
-        folium.Marker(location=[latitude, longitude], popup='Custom Marker 1', tooltip=f'<strong>Point d\'intérêt ({latitude}, {longitude}) </strong>', icon=folium.Icon(
+        folium.Marker(location=[latitude, longitude], popup='Custom Marker 1', tooltip=f'<strong>Point d\'interet ({latitude}, {longitude}) </strong>', icon=folium.Icon(
             color=colors[color_index % len(colors)], icon='none')).add_to(map_display)
         color_index += 1
         feature_group.add_to(map_display)
@@ -214,9 +215,9 @@ def visualisation_sections_multi(
             f"Tronçon Point ({latitude1}, {longitude1})")
         folium.vector_layers.PolyLine(coordinates, popup=f'<b>Tronçon Point ({latitude1}, {longitude1})</b>',
                                       tooltip=f'Tronçon Point ({latitude1}, {longitude1})', color=colors[color_index % len(colors)], weight=10).add_to(feature_group)
-        folium.Marker(location=[latitude1, longitude1], popup='Custom Marker 1', tooltip=f'<strong>Point d\'intérêt ({latitude1}, {longitude1}) </strong>', icon=folium.Icon(
+        folium.Marker(location=[latitude1, longitude1], popup='Custom Marker 1', tooltip=f'<strong>Point d\'interet ({latitude1}, {longitude1}) </strong>', icon=folium.Icon(
             color=colors[color_index % len(colors)], icon='none')).add_to(map_display)
-        folium.Marker(location=[latitude2, longitude2], popup='Custom Marker 1', tooltip=f'<strong>Point d\'intérêt ({latitude2}, {longitude2}) </strong>', icon=folium.Icon(
+        folium.Marker(location=[latitude2, longitude2], popup='Custom Marker 1', tooltip=f'<strong>Point d\'interet ({latitude2}, {longitude2}) </strong>', icon=folium.Icon(
             color=colors[color_index % len(colors)], icon='none')).add_to(map_display)
         color_index += 1
         feature_group.add_to(map_display)
@@ -264,10 +265,13 @@ def generate_results(
     f.write(message)
     for script in scripts_layout:
         f.write(str(script))
+        message = message + str(script)
     for script in scripts_map:
         f.write(str(script))
+        message =  message + str(script)
     f.close()
-    return None
+    message_html = ''.join((c for c in unicodedata.normalize('NFD', message) if unicodedata.category(c) != 'Mn')) # Remove accent
+    return message_html
 
 
 def get_order_in_segment(
@@ -313,7 +317,9 @@ def merge_sections(
     """
     if (section_1 in list_sections) and (section_2 in list_sections):
         is_seen = False
-        merge_sections = [0, 0, 0, 0]
+        merge_sections = [0,0,0,0]
+        if section_1 == section_2:
+            return section_1
         for x in list_sections:
             if x == section_1:
                 if is_seen:
