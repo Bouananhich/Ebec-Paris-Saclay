@@ -33,6 +33,10 @@
   color: #69003B !important;
 }
 
+#div_map {
+  height: 60%;
+}
+
 .orange {
   background-color: #D06886;
 }
