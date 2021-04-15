@@ -121,9 +121,11 @@ def distance_from_segment(
             distances_dict[key] = distance
     if not bool(distances_dict):  # if dict is empty
         for key, (p1, p2) in coordinates_dict.items():
+            p1, p2 = array(p1), array(p2)
             distance_p1, distance_p2 = norm(
                 reference - p1), norm(reference - p2)
             distance = min(distance_p1, distance_p2)
+            distances_dict[key] = distance
     return distances_dict
 
 
@@ -254,11 +256,21 @@ def generate_results(
     head_map = soup_map.find('head')
     body_map = soup_map.find('body')
     scripts_map = soup_map.findAll('script')
-    dataframe_html = results_dataframe.to_html()
-
+    dataframe_html = results_dataframe.to_html(index=False, classes='striped')
+    help_message = ''
+    if 'latitude' in results_dataframe.keys():# uni
+        for row in range(len(results_dataframe)):
+            help_message += f"""<li>votre point {row+1} aux coordonnées ({results_dataframe['latitude'][row]},{results_dataframe['longitude'][row]}) est le point {results_dataframe['num_arbre'][row]} dans {results_dataframe['rue'][row]} entre {results_dataframe['debut_troncon'][row]} et {results_dataframe['fin_troncon'][row]}</li>"""
+        help_message = '<div><ul id="help_message">' + help_message + '</ul></div>'
+    elif 'latitude1'in results_dataframe.keys(): # multi
+        for row in range(len(results_dataframe)):
+            help_message += f"""<li>Vos points aux coordonnées ({results_dataframe['latitude1'][row]},{results_dataframe['longitude1'][row]}) et {results_dataframe['latitude2'][row]},{results_dataframe['longitude2'][row]} se trouve entre {results_dataframe['debut_troncon'][row]} et {results_dataframe['fin_troncon'][row]}</li>"""
+        help_message = '<div><ul id="help_message">' + help_message + '</ul></div>'
+    else:
+        help_message = '<div><p> Impossible afficher le texte</p></div>'
     head = str(head_layout)[:-7] + str(head_map)[6:]
     body = '<body>' + str(navigation) + '<div class="row" id = "div_map">' + str(body_map)[
-        6:-7] + '</div>' + dataframe_html + '</div>' + str(footer_layout) + '</body>'
+        6:-7]+ '</div>' + '<div>' + dataframe_html + '</div>' + help_message + str(footer_layout) + '</body>'
 
     message = '<html>' + head + body
     f = open(results_filename, 'w')

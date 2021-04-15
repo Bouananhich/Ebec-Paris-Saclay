@@ -46,7 +46,7 @@ def pipeline_multi(list_input):
             resultat_coords=merge_sections(section[0],section[1],roads)
             print(resultat_coords)
             inter=[coords[0][0],coords[0][1],coords[1][0],coords[1][1],''.join((c for c in unicodedata.normalize('NFD', resultat_coords[0]) if unicodedata.category(c) != 'Mn')),''.join((c for c in unicodedata.normalize('NFD', resultat_coords[1]) if unicodedata.category(c) != 'Mn')),city[coords]]
-    resultat.append(inter)
+        resultat.append(inter)
 
     df = pd.DataFrame(resultat)
     df.columns = ['latitude1', 'longitude1','latitude2', 'longitude2',
