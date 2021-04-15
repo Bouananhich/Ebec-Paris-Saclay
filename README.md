@@ -8,9 +8,9 @@ pip install -r requirements.txt
 ``` 
 
 ## Example of use 
-![Here's a screenshot](./Capture.jpg)
-
-
+![Click here to see the interface](./Capture.JPG)
+When given these coordinates : (,) the result is :
+![Click here to see the results](./Capture.JPG)
 ## Technical explanations 
 
 
