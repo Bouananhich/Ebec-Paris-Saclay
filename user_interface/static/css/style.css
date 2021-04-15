@@ -50,3 +50,21 @@
   position: relative;
   width: 27%;
 }
+
+#div_map{
+  height: 60%;
+  width: 100%;
+}
+
+ul#help_message {
+  
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  padding: 25px;
+}
+
+li {
+  width: 50%;
+  padding-top: 5px;
+}

@@ -63,7 +63,7 @@ def uni_csv():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             csv_file = pd.read_csv(file)
-            csv_file.colums = ['lat','lng']
+            print(csv_file.columns)
             coord_csv_uni = list(zip(csv_file.lat, csv_file.lng))
             flash('file successfully upload')
             if len(coord_csv_uni) == 0:
@@ -118,8 +118,7 @@ def multi_csv():
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            csv_file = pd.read_csv(file)
-            csv_file.colums = ['lat1','lng1','lat2','lng2']
+            csv_file = pd.read_csv(file, usecols=['lat1','lng1','lat2','lng2'])
             coord_csv_multi = list(zip(zip(csv_file.lat1, csv_file.lng1),zip(csv_file.lat2, csv_file.lng2)))
             if len(coord_csv_multi) == 0:
                 return render_template('solution_multi.html')
