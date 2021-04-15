@@ -10,7 +10,7 @@ pip install -r requirements.txt
 
 
 ## Example of use 
-![Click here to see the interface](./Capture1.JPG)
+![Click here to see the interface](./Capture2.JPG)
 ![Click here to see the results](./Capture.JPG)
 
 ## Technical explanations 
