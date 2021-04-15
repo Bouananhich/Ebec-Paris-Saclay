@@ -8,7 +8,7 @@ pip install -r requirements.txt
 ``` 
 
 ## Example of use 
-![GitHub Logo](/images/capture.jpg)
+![GitHub Logo](/Capture.jpg)
 Format: ![Alt Text](url)
 
 ## Technical explanations 
