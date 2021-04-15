@@ -10,6 +10,7 @@ pip install -r requirements.txt
 ```bash
 python user_interface/app.py
 ``` 
+Then open your navigator on localhost.
 
 ## Example of use 
 ![Click here to see the interface](./Capture2.JPG)
