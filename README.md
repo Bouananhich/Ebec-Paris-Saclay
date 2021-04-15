@@ -10,6 +10,6 @@ pip install -r requirements.txt
 
 ## Contributors 
 
-Arnaud Petit, Simon Tronchi, Matthieu Annequin et Hicham Bouanani
+Arnaud Petit, Simon Tronchi, Matthieu Annequin and Hicham Bouanani
 
 ## License
