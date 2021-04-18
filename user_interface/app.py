@@ -1,8 +1,9 @@
-from flask import Flask, redirect, render_template, request, url_for, flash
+from flask import Flask, redirect, render_template, request, url_for, flash,render_template_string
 from werkzeug.utils import secure_filename
 import pandas as pd
 from package import pipeline_multi, pipeline_uni
 from package.utils.utils import generate_results
+import webbrowser
 
 app = Flask(__name__)
 
@@ -31,19 +32,21 @@ def results():
     return render_template('results.html')
 
 @app.route('/uni_form', methods=['POST'])
-def uni_form():#faire les cas d'erreur car pas de string
+def uni_form():
     data = request.form.to_dict(flat=False)
     coord_input_uni = []
     for i in range(len(data)//2):
-        latitude = data.get('latitude'+str(i+1),[0])[0]
-        longitude = data.get('longitude'+str(i+1),[0])[0]
+        latitude = data.get('latitude'+str(i+1),['fail'])[0]
+        longitude = data.get('longitude'+str(i+1),['fail'])[0]
         try:
             coord_input_uni.append((float(latitude),float(longitude)))
         except:
             continue
-        results = pipeline_uni(coord_input_uni)
-        generate_results(results, './user_interface/templates/layout.html','./map.html','./user_interface/templates/results.html')
-    return render_template('results.html')
+    if len(coord_input_uni) == 0:
+        return render_template('solution_uni.html')
+    results = pipeline_uni(coord_input_uni)
+    html_file = generate_results(results, './user_interface/templates/layout.html','./map.html','./user_interface/templates/results.html')
+    return render_template_string(html_file)
 
 @app.route('/uni_csv', methods=['POST','GET'])
 def uni_csv():
@@ -60,12 +63,14 @@ def uni_csv():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             csv_file = pd.read_csv(file)
-            csv_file.colums = ['lat','lng']
             coord_csv_uni = list(zip(csv_file.lat, csv_file.lng))
             flash('file successfully upload')
+            if len(coord_csv_uni) == 0:
+                return render_template('solution_uni.html')
             results = pipeline_uni(coord_csv_uni)
-            generate_results(results, './user_interface/templates/layout.html','./map.html','./user_interface/templates/results.html')
-            return render_template('results.html')
+            html_file = generate_results(results, './user_interface/templates/layout.html','./map.html','./user_interface/templates/results.html')
+        return render_template_string(html_file)
+
     
     return '''
     <!doctype html>
@@ -83,17 +88,20 @@ def multi_form():#faire la récupération
     data = request.form.to_dict(flat=False)
     coord_input_multi = []
     for i in range(len(data)//4):
-        latitude1 = data.get('1latitude'+str(i+1),[0])[0]
-        longitude1 = data.get('1longitude'+str(i+1),[0])[0]
-        latitude2 = data.get('2latitude'+str(i+1),[0])[0]
-        longitude2 = data.get('2longitude'+str(i+1),[0])[0]
+        latitude1 = data.get('1latitude'+str(i+1),['fail'])[0]
+        longitude1 = data.get('1longitude'+str(i+1),['fail'])[0]
+        latitude2 = data.get('2latitude'+str(i+1),['fail'])[0]
+        longitude2 = data.get('2longitude'+str(i+1),['fail'])[0]
         try:
             coord_input_multi.append(((float(latitude1),float(longitude1)),(float(latitude2),float(longitude2))))
         except:
             continue
-        results = pipeline_multi(coord_input_multi)
-        generate_results(results, './user_interface/templates/layout.html','./map.html','./user_interface/templates/results.html')
-    return render_template('solution_multi.html')
+    if len(coord_input_multi) == 0:
+            return render_template('solution_multi.html')
+    results = pipeline_multi(coord_input_multi)
+    html_file = generate_results(results, './user_interface/templates/layout.html','./map.html','./user_interface/templates/results.html')
+    return render_template_string(html_file)
+
 
 @app.route('/multi_csv', methods=['POST','GET'])
 def multi_csv():
@@ -109,12 +117,13 @@ def multi_csv():
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            csv_file = pd.read_csv(file)
-            csv_file.colums = ['lat1','lng1','lat2','lng2']
+            csv_file = pd.read_csv(file, usecols=['lat1','lng1','lat2','lng2'])
             coord_csv_multi = list(zip(zip(csv_file.lat1, csv_file.lng1),zip(csv_file.lat2, csv_file.lng2)))
+            if len(coord_csv_multi) == 0:
+                return render_template('solution_multi.html')
             results = pipeline_multi(coord_csv_multi)
-            generate_results(results, './user_interface/templates/layout.html','./map.html','./user_interface/templates/results.html')
-            return render_template('solution_multi.html')
+            html_file = generate_results(results, './user_interface/templates/layout.html','./map.html','./user_interface/templates/results.html')
+            return render_template_string(html_file)
     return '''
     <!doctype html>
     <title>Confirm upload</title>
